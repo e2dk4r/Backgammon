@@ -1,5 +1,4 @@
-using System;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -49,9 +48,11 @@ public class Piece : MonoBehaviour
     #region Unity API
     void Update()
     {
-        // TODO: change input touch drag and drop
-        // if touch begins
-        if (Input.GetButtonDown("Fire1") && IsMouseOverThis())
+        if (IsCurrentPlayerTurn() &&
+            IsCurrentPlayerRolled() &&
+            IsCurrentPlayerPiece() &&
+            IsCurrentPlayerMoveLeft() &&
+            Input.GetButtonDown("Fire1") && IsMouseOverThis())
         {
             OnPieceHold();
         }
@@ -81,79 +82,7 @@ public class Piece : MonoBehaviour
 
     #endregion
 
-    private void OnPieceHold()
-    {
-        // TODO: if it is not top piece
-        // TODO: if there is piece on bar, it must be placed on first
-        // TODO: if player has no moves
-
-        if (!Slot.IsTopPiece(currentSlot, this))
-        {
-            Debug.LogError("Piece is not top of the stack");
-            isBeingHeld = false;
-        }
-        else
-        {
-            // hold the piece
-            isBeingHeld = true;
-
-            // store current position for invalid move
-            startPos.x = transform.position.x;
-            startPos.y = transform.position.y;
-        }
-    }
-
-    private void OnPieceRelease()
-    {
-        isBeingHeld = false;
-
-        // if collision not happen
-        if (collisionSlot == null)
-        {
-            // reset the position
-            ResetToOldPosition();
-        }
-        else
-        {
-            MoveActionTypes action;
-            var error = Rule.ValidateMove(this, collisionSlot, 1, out action);
-            if (error == MoveError.NoError)
-            {
-                Debug.LogWarning(action);
-                PlaceOn(BoardManager.instance.slotArray[collisionSlot.slotId - 1].transform, collisionSlot, collisionSlot.pieces.Count);
-            }
-            else
-            {
-                ResetToOldPosition();
-                Debug.LogError(error);
-            }
-            collisionSlot = null;
-        }
-    }
-
-    private bool IsMouseOverThis()
-    {
-        var hit = Physics2D.Raycast(GetMousePos(), Vector2.zero, 0, Constants.LAYER_PIECE);
-        if (hit.collider != null)
-        {
-            print(hit.collider.name);
-            if (hit.collider.name == name)
-                return true;
-        }
-        return false;
-    }
-
-    private Vector2 GetMousePos()
-    {
-        Vector3 mousePos = Input.mousePosition;
-        mousePos = Camera.main.ScreenToWorldPoint(mousePos);
-        return new Vector2(mousePos.x, mousePos.y);
-    }
-
-    private void ResetToOldPosition()
-    {
-        transform.position = new Vector3(startPos.x, startPos.y, 0);
-    }
+    #region Draw Methods
 
     public void PlaceOn(Transform slotPos, Slot slot, int index)
     {
@@ -184,6 +113,194 @@ public class Piece : MonoBehaviour
         //-------------------------------------------------
         transform.parent = slotPos;
         transform.localPosition = new Vector3(0, posY, 0);
+    }
+
+    private void ResetToOldPosition()
+    {
+        transform.position = new Vector3(startPos.x, startPos.y, 0);
+    }
+
+    #endregion
+
+    private bool IsCurrentPlayerMoveLeft()
+    {
+        return GameManager.instance.currentPlayer.IsMoveLeft();
+    }
+
+    public IEnumerable<Slot> GetForwardSlots()
+    {
+        if (IsOutside())
+            return null;
+
+        var list = new List<Slot>();
+        var allSlots = BoardManager.instance.slotArray;
+
+        foreach (var slot in allSlots.Select(x => x.GetComponent<Slot>()))
+        {
+            if (Rule.IsMovingToHome(this, slot))
+                list.Add(slot);
+        }
+
+        return list;
+    }
+
+    private bool IsOutside()
+    {
+        var list = pieceType == PieceType.White ?
+            BoardManager.instance.whiteOutside.GetComponent<Slot>() :
+            BoardManager.instance.blackOutside.GetComponent<Slot>();
+
+        return list.pieces.Contains(this);
+    }
+
+    private bool IsCurrentPlayerRolled()
+    {
+        return GameManager.instance.currentPlayer.rolledDice;
+    }
+
+    private bool IsCurrentPlayerPiece()
+    {
+        return GameManager.instance.currentPlayer.pieceType == pieceType;
+    }
+
+    private bool IsCurrentPlayerTurn()
+    {
+        return GameManager.instance.currentPlayer == GameManager.instance.turnPlayer;
+    }
+
+    private void OnPieceHold()
+    {
+        // TODO: if it is not top piece
+        // TODO: if there is piece on bar, it must be placed on first
+        if (!GameManager.instance.currentPlayer.rolledDice)
+        {
+            Debug.LogError("Player is not rolled the dice");
+            isBeingHeld = false;
+        }
+        else if (!Slot.IsTopPiece(currentSlot, this))
+        {
+            Debug.LogError("Piece is not top of the stack");
+            isBeingHeld = false;
+        }
+        else if (!IsBarEmpty() && currentSlot.slotType != SlotType.Bar)
+        {
+            Debug.LogError("First, pieces on bar must be placed");
+            isBeingHeld = false;
+        }
+        else
+        {
+            // hold the piece
+            isBeingHeld = true;
+
+            // store current position for invalid move
+            startPos.x = transform.position.x;
+            startPos.y = transform.position.y;
+        }
+    }
+
+    private bool IsBarEmpty()
+    {
+        var barList = (GameManager.instance.currentPlayer.pieceType == PieceType.White) ?
+            BoardManager.instance.whiteBar.GetComponent<Slot>().pieces :
+            BoardManager.instance.blackBar.GetComponent<Slot>().pieces;
+
+        if (barList.Count != 0)
+            return false;
+
+        return true;
+    }
+
+    private void OnPieceRelease()
+    {
+        isBeingHeld = false;
+
+        // if collision not happen
+        if (collisionSlot == null)
+        {
+            // reset the position
+            ResetToOldPosition();
+        }
+        else
+        {
+            // TODO: if there is no other moves left for player
+            // TODO: use rolled dice values
+
+            // current dice of player
+            var dice = BoardManager.instance.currentDice;
+            // current player
+            var currentPlayer = GameManager.instance.currentPlayer;
+            // get moves left
+            var movesLeft = dice.GetMovesLeftList(currentPlayer.movesPlayed.Select(x => x.step));
+
+            foreach (var step in movesLeft)
+            {
+                MoveActionTypes action;
+                var error = Rule.ValidateMove(this, collisionSlot, step, out action);
+
+                if (error == MoveError.NoError)
+                {
+                    OnSuccessfulMove(action);
+                }
+                else
+                {
+                    OnFailedMove(error);
+                }
+
+                collisionSlot = null;
+            }
+        }
+    }
+
+    private void OnFailedMove(MoveError error)
+    {
+        ResetToOldPosition();
+        Debug.LogError(error);
+    }
+
+    private void OnSuccessfulMove(MoveActionTypes action)
+    {
+        // TODO: make hit action respond
+        var movesPlayedList = GameManager.instance.currentPlayer.movesPlayed;
+
+        Debug.LogWarning(action);
+
+        // log played moves for undo
+        movesPlayedList.Add(new Move { from = currentSlot, to = collisionSlot, step = Mathf.Abs(currentSlot.slotId - collisionSlot.slotId), action = action });
+
+        //---------------------------------------
+        // action events
+        //---------------------------------------
+        // move enemy to bar
+        if (action == MoveActionTypes.Hit)
+        {
+            var enemyBar = pieceType == PieceType.White ?
+                BoardManager.instance.blackBar :
+                BoardManager.instance.whiteBar;
+
+            PlaceOn(enemyBar.transform, enemyBar.GetComponent<Slot>(), 0);
+        }
+
+        // place on new slot
+        PlaceOn(BoardManager.instance.slotArray[collisionSlot.slotId - 1].transform, collisionSlot, collisionSlot.pieces.Count);
+    }
+
+    private bool IsMouseOverThis()
+    {
+        var hit = Physics2D.Raycast(GetMousePos(), Vector2.zero, 0, Constants.LAYER_PIECE);
+        if (hit.collider != null)
+        {
+            print(hit.collider.name);
+            if (hit.collider.name == name)
+                return true;
+        }
+        return false;
+    }
+
+    private Vector2 GetMousePos()
+    {
+        Vector3 mousePos = Input.mousePosition;
+        mousePos = Camera.main.ScreenToWorldPoint(mousePos);
+        return new Vector2(mousePos.x, mousePos.y);
     }
 
     #region Static Methods

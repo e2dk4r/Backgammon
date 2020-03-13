@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class BoardManager : MonoBehaviour
 {
@@ -20,11 +21,16 @@ public class BoardManager : MonoBehaviour
     public PieceObject blackPieceObject;
     public PieceObject whitePieceObject;
 
+    public Dice currentDice;
+    public Button RollDiceButton;
+
     private Piece[] pieces = new Piece[30];
     private void Awake()
     {
         if (instance == null)
             instance = this;
+
+        RollDiceButton.onClick.AddListener(RollDices);
 
         InitializePieces();
         PlacePiecesOnBoard();
@@ -111,5 +117,28 @@ public class BoardManager : MonoBehaviour
             var piece = Piece.CreateFromPrefab(piecePrefab, i + 1, pieceObject);
             pieces[i] = piece;
         }
+    }
+
+    private void RollDices()
+    {
+        if (!IsCurrentPlayerRolledDice())
+        {
+            currentDice.Roll();
+            GameManager.instance.currentPlayer.rolledDice = true;
+        }
+        else
+        {
+            Debug.LogError("Current player rolled the dice");
+        }
+    }
+
+    private static bool IsCurrentPlayerRolledDice()
+    {
+        return GameManager.instance.currentPlayer.rolledDice;
+    }
+
+    public IEnumerable<Piece> GetAllPiecesByType(PieceType type)
+    {
+        return pieces.Where(x => x.pieceType == type);
     }
 }

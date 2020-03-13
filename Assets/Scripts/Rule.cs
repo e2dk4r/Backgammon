@@ -1,28 +1,5 @@
 using System;
 
-public enum MoveError
-{
-    // no error
-    NoError,
-    // there is not enough step value to move in
-    NotEnoughSteps,
-    // unknown error
-    Unknown,
-    BlockedByEnemy,
-    WrongHomeDirection,
-}
-public enum MoveActionTypes
-{
-    // move piece from one point to another
-    Move,
-    // recover piece from bar and place it on board
-    Recover,
-    // hit opponent's piece and send it to bar
-    Hit,
-    // move outside the board
-    Bear,
-}
-
 public class Rule
 {
     public static bool IsValidMove(Piece piece, Slot requestedSlot)
@@ -39,11 +16,14 @@ public class Rule
 
         return false;
     }
+
     public static MoveError ValidateMove(Piece piece, Slot requestedSlot, int steps, out MoveActionTypes action)
     {
         action = MoveActionTypes.Move;
 
-        // required before anything
+        //---------------------------------------
+        // handle errors
+        //---------------------------------------
         if (Slot.GetRequiredStepCount(piece.currentSlot, requestedSlot) != steps)
             return MoveError.NotEnoughSteps;
 
@@ -53,7 +33,17 @@ public class Rule
         if (!IsMovingToHome(piece, requestedSlot))
             return MoveError.WrongHomeDirection;
 
-        if (IsSlotEmpty(requestedSlot))
+        //---------------------------------------
+        // handle actions
+        //---------------------------------------
+        // TODO: Bear action
+        if (requestedSlot.slotType == SlotType.Outside)
+            action = MoveActionTypes.Bear;
+
+        else if (piece.currentSlot.slotType == SlotType.Bar)
+            action = MoveActionTypes.Recover;
+
+        else if (IsSlotEmpty(requestedSlot))
             action = MoveActionTypes.Move;
 
         else if (IsSlotYours(requestedSlot, piece.pieceType))
@@ -61,13 +51,12 @@ public class Rule
 
         else if (!IsSlotBlockedByEnemy(requestedSlot, Piece.GetEnemyType(piece.pieceType)))
             action = MoveActionTypes.Hit;
-
-        // TODO: Bear action
+            
 
         return MoveError.NoError;
     }
 
-    private static bool IsMovingToHome(Piece piece, Slot requestedSlot)
+    public static bool IsMovingToHome(Piece piece, Slot requestedSlot)
     {
         return (piece.pieceType == PieceType.White) ? 
             requestedSlot.slotId < piece.Position : 
