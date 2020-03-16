@@ -232,21 +232,24 @@ public class Piece : MonoBehaviour
             // get moves left
             var movesLeft = dice.GetMovesLeftList(currentPlayer.movesPlayed.Select(x => x.step));
 
+            MoveActionTypes action = MoveActionTypes.Move;
+            MoveError error = MoveError.Unknown;
+
             foreach (var step in movesLeft)
             {
-                MoveActionTypes action;
-                var error = Rule.ValidateMove(this, collisionSlot, step, out action);
+                error = Rule.ValidateMove(this, collisionSlot, step, out action);
 
                 if (error == MoveError.NoError)
-                {
-                    OnSuccessfulMove(action);
-                }
-                else
-                {
-                    OnFailedMove(error);
-                }
+                    break;
+            }
 
-                collisionSlot = null;
+            if (error == MoveError.NoError)
+            {
+                OnSuccessfulMove(action);
+            }
+            else
+            {
+                OnFailedMove(error);
             }
         }
     }

@@ -23,6 +23,11 @@ public class Slot : MonoBehaviour
 
     public static int GetRequiredStepCount(Slot from, Slot to)
     {
+        if (from == null ||
+            to == null
+            )
+            return -1;
+
         return Math.Abs(to.slotId - from.slotId);
     }
     #endregion
