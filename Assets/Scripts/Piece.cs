@@ -84,8 +84,9 @@ public class Piece : MonoBehaviour
 
     #region Draw Methods
 
-    public void PlaceOn(Transform slotPos, Slot slot, int index)
+    public void PlaceOn(Slot slot, int index)
     {
+        var slotPos = slot.transform;
         //-------------------------------------------------
         // calculate offset of y value
         //-------------------------------------------------
@@ -271,7 +272,7 @@ public class Piece : MonoBehaviour
         Debug.LogWarning(action);
 
         // log played moves for undo
-        movesPlayedList.Add(new Move { from = currentSlot, to = collisionSlot, step = Mathf.Abs(currentSlot.slotId - collisionSlot.slotId), action = action });
+        movesPlayedList.Add(new Move { piece = this, from = currentSlot, to = collisionSlot, step = Mathf.Abs(currentSlot.slotId - collisionSlot.slotId), action = action });
 
         //---------------------------------------
         // action events
@@ -282,7 +283,7 @@ public class Piece : MonoBehaviour
             var enemyPiece = collisionSlot.GetComponent<Slot>().pieces.Last();
             var enemyBar = Slot.GetBar(Piece.GetEnemyType(pieceType));
 
-            enemyPiece.PlaceOn(enemyBar.transform, enemyBar.GetComponent<Slot>(), 0);
+            enemyPiece.PlaceOn(enemyBar.GetComponent<Slot>(), 0);
         }
 
         // move yourself to outside
@@ -290,11 +291,11 @@ public class Piece : MonoBehaviour
         {
             var slotOutside = Slot.GetOutside(pieceType);
 
-            PlaceOn(slotOutside.transform, slotOutside.GetComponent<Slot>(), 0);
+            PlaceOn(slotOutside.GetComponent<Slot>(), 0);
         }
         // place on new slot
         else
-            PlaceOn(BoardManager.instance.slotArray[collisionSlot.slotId - 1].transform, collisionSlot, collisionSlot.pieces.Count);
+            PlaceOn(collisionSlot, collisionSlot.pieces.Count);
     }
 
     private bool IsMouseOverThis()
