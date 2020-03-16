@@ -48,11 +48,11 @@ public class Piece : MonoBehaviour
     #region Unity API
     void Update()
     {
-        if (IsCurrentPlayerTurn() &&
+        if (Input.GetButtonDown("Fire1") && IsMouseOverThis() &&
+            IsCurrentPlayerTurn() &&
             IsCurrentPlayerRolled() &&
             IsCurrentPlayerPiece() &&
-            IsCurrentPlayerMoveLeft() &&
-            Input.GetButtonDown("Fire1") && IsMouseOverThis())
+            IsCurrentPlayerMoveLeft())
         {
             OnPieceHold();
         }
