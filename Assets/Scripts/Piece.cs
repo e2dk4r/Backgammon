@@ -113,6 +113,7 @@ public class Piece : MonoBehaviour
         //-------------------------------------------------
         transform.parent = slotPos;
         transform.localPosition = new Vector3(0, posY, 0);
+        this.GetComponent<SpriteRenderer>().sortingOrder = slot.pieces.Count;
     }
 
     private void ResetToOldPosition()
