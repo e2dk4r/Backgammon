@@ -3364,8 +3364,8 @@ MonoBehaviour:
   - {fileID: 1658145849}
   - {fileID: 1524611356}
   - {fileID: 616995624}
-  whiteBar: {fileID: 1058796775}
-  blackBar: {fileID: 1154397913}
+  whiteBar: {fileID: 1154397913}
+  blackBar: {fileID: 1058796775}
   whiteOutside: {fileID: 1164089643}
   blackOutside: {fileID: 1021845975}
   piecePrefab: {fileID: 4113709488827378052, guid: 8eac452f361429145b7544d511b25cbf,
