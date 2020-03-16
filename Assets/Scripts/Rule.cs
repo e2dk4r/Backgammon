@@ -39,19 +39,21 @@ public class Rule
         //---------------------------------------
         // handle actions
         //---------------------------------------
-        // TODO: Bear action
+        // bear action
         if (requestedSlot.slotType == SlotType.Outside)
-            action = MoveActionTypes.Bear;
+            action |= MoveActionTypes.Bear;
 
+        // recover action
         else if (piece.currentSlot.slotType == SlotType.Bar)
             action |= MoveActionTypes.Recover;
 
+        // if requested slot empty
         if (IsSlotEmpty(requestedSlot))
-            action = MoveActionTypes.Move;
-
+            action |= MoveActionTypes.Move;
+        // if requested slot not empty, and requested slot is yours
         else if (IsSlotYours(requestedSlot, piece.pieceType))
-            action = MoveActionTypes.Move;
-
+            action |= MoveActionTypes.Move;
+        // if requested slot not empty, and requested is not yours, and requested slot not blocked by enemy
         else if (!IsSlotBlockedByEnemy(requestedSlot, Piece.GetEnemyType(piece.pieceType)))
             action |= MoveActionTypes.Hit;
 
@@ -62,11 +64,11 @@ public class Rule
     {
         var homeSlots = Slot.GetHomeSlots(type);
         var pieces = BoardManager.instance.GetAllPiecesByType(type);
-        var piecesOnBoard = pieces.Where(x => x.currentSlot != null && x.currentSlot.slotType != SlotType.Outside);
+        var piecesOnBoard = pieces.TakeWhile(x => x.currentSlot != null && x.currentSlot.slotType != SlotType.Outside);
 
         foreach (var piece in piecesOnBoard)
         {
-            if (homeSlots.Any(x => x != piece.currentSlot))
+            if (!homeSlots.Contains(piece.currentSlot))
                 return false;
         }
 
