@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 public class Dice : MonoBehaviour
 {
@@ -32,8 +33,8 @@ public class Dice : MonoBehaviour
 
     public void Roll()
     {
-        values[0] = UnityEngine.Random.Range(1, 7);
-        values[1] = UnityEngine.Random.Range(1, 7);
+        values[0] = Random.Range(1, 7);
+        values[1] = Random.Range(1, 7);
 
         AfterRolled();
     }
@@ -42,11 +43,6 @@ public class Dice : MonoBehaviour
     {
         // display the values
         DisplayValue();
-
-        // check if there is no move left for player
-        var turnPlayer = GameManager.instance.turnPlayer;
-        if (turnPlayer != null && !turnPlayer.IsMoveLeft())
-            GameManager.instance.NextTurn();
     }
 
     public bool IsDoubleMove()
