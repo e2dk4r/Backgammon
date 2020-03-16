@@ -135,12 +135,14 @@ public class Piece : MonoBehaviour
 
         var list = new List<Slot>();
         var allSlots = BoardManager.instance.slotArray;
+        var outside = Slot.GetOutside(pieceType);
 
         foreach (var slot in allSlots.Select(x => x.GetComponent<Slot>()))
         {
             if (Rule.IsMovingToHome(this, slot))
                 list.Add(slot);
         }
+        list.Add(outside);
 
         return list;
     }
