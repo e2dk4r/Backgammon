@@ -274,7 +274,7 @@ public class Piece : MonoBehaviour
         // action events
         //---------------------------------------
         // move enemy to bar
-        if (action == MoveActionTypes.Hit)
+        if ((action & MoveActionTypes.Hit) == MoveActionTypes.Hit)
         {
             var enemyPiece = collisionSlot.GetComponent<Slot>().pieces.Last();
             var enemyBar = Slot.GetBar(Piece.GetEnemyType(pieceType));
@@ -283,17 +283,14 @@ public class Piece : MonoBehaviour
         }
 
         // move yourself to outside
-        if (action == MoveActionTypes.Bear)
+        if ((action & MoveActionTypes.Bear) == MoveActionTypes.Bear)
         {
             var slotOutside = Slot.GetOutside(pieceType);
 
             PlaceOn(slotOutside.transform, slotOutside.GetComponent<Slot>(), 0);
         }
-
         // place on new slot
-        if (action == MoveActionTypes.Move ||
-            action == MoveActionTypes.Hit ||
-            action == MoveActionTypes.Recover)
+        else
             PlaceOn(BoardManager.instance.slotArray[collisionSlot.slotId - 1].transform, collisionSlot, collisionSlot.pieces.Count);
     }
 

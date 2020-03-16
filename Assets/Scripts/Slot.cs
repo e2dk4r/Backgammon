@@ -16,6 +16,7 @@ public class Slot : MonoBehaviour
     }
 
     #region Static Methods
+
     public static bool IsTopPiece(Slot slot, Piece piece)
     {
         return slot.pieces.Last() == piece;
@@ -30,5 +31,34 @@ public class Slot : MonoBehaviour
 
         return Math.Abs(to.slotId - from.slotId);
     }
+
+    public static Slot GetBar(PieceType type)
+    {
+        var slotObject = (type == PieceType.White) ?
+            BoardManager.instance.whiteBar :
+            BoardManager.instance.blackBar;
+
+        return slotObject.GetComponent<Slot>();
+    }
+
+    public static Slot GetOutside(PieceType type)
+    {
+        var slotObject = (type == PieceType.White) ?
+            BoardManager.instance.whiteOutside :
+            BoardManager.instance.blackOutside;
+
+        return slotObject.GetComponent<Slot>();
+    }
+
+    public static IEnumerable<Slot> GetHomeSlots(PieceType type)
+    {
+        var slots = BoardManager.instance.slotArray.Select(x => x.GetComponent<Slot>());
+
+        if (type == PieceType.Black)
+            return slots.Where(x => x.slotId >= 19 && x.slotId <= 24);
+
+        return slots.Where(x => x.slotId >= 1 && x.slotId <= 6);
+    }
+
     #endregion
 }

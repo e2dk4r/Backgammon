@@ -1,4 +1,4 @@
-using System;
+using System.Linq;
 
 public class Rule
 {
@@ -33,6 +33,9 @@ public class Rule
         if (!IsMovingToHome(piece, requestedSlot))
             return MoveError.WrongHomeDirection;
 
+        if (requestedSlot.slotType == SlotType.Outside && !IsAllPiecesHome(piece.pieceType))
+            return MoveError.AllPiecesNotInHome;
+
         //---------------------------------------
         // handle actions
         //---------------------------------------
@@ -41,25 +44,39 @@ public class Rule
             action = MoveActionTypes.Bear;
 
         else if (piece.currentSlot.slotType == SlotType.Bar)
-            action = MoveActionTypes.Recover;
+            action |= MoveActionTypes.Recover;
 
-        else if (IsSlotEmpty(requestedSlot))
+        if (IsSlotEmpty(requestedSlot))
             action = MoveActionTypes.Move;
 
         else if (IsSlotYours(requestedSlot, piece.pieceType))
             action = MoveActionTypes.Move;
 
         else if (!IsSlotBlockedByEnemy(requestedSlot, Piece.GetEnemyType(piece.pieceType)))
-            action = MoveActionTypes.Hit;
-            
+            action |= MoveActionTypes.Hit;
 
         return MoveError.NoError;
     }
 
+    private static bool IsAllPiecesHome(PieceType type)
+    {
+        var homeSlots = Slot.GetHomeSlots(type);
+        var pieces = BoardManager.instance.GetAllPiecesByType(type);
+        var piecesOnBoard = pieces.Where(x => x.currentSlot != null && x.currentSlot.slotType != SlotType.Outside);
+
+        foreach (var piece in piecesOnBoard)
+        {
+            if (homeSlots.Any(x => x != piece.currentSlot))
+                return false;
+        }
+
+        return true;
+    }
+
     public static bool IsMovingToHome(Piece piece, Slot requestedSlot)
     {
-        return (piece.pieceType == PieceType.White) ? 
-            requestedSlot.slotId < piece.Position : 
+        return (piece.pieceType == PieceType.White) ?
+            requestedSlot.slotId < piece.Position :
             requestedSlot.slotId > piece.Position;
     }
 
