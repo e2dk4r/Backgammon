@@ -283,8 +283,21 @@ public class Piece : MonoBehaviour
             PlaceOn(enemyBar.transform, enemyBar.GetComponent<Slot>(), 0);
         }
 
+        // move yourself to outside
+        if (action == MoveActionTypes.Bear)
+        {
+            var slotObject = (pieceType == PieceType.White) ?
+                BoardManager.instance.whiteOutside :
+                BoardManager.instance.blackOutside;
+
+            PlaceOn(slotObject.transform, slotObject.GetComponent<Slot>(), 0);
+        }
+
         // place on new slot
-        PlaceOn(BoardManager.instance.slotArray[collisionSlot.slotId - 1].transform, collisionSlot, collisionSlot.pieces.Count);
+        if (action == MoveActionTypes.Move ||
+            action == MoveActionTypes.Hit ||
+            action == MoveActionTypes.Recover)
+            PlaceOn(BoardManager.instance.slotArray[collisionSlot.slotId - 1].transform, collisionSlot, collisionSlot.pieces.Count);
     }
 
     private bool IsMouseOverThis()
