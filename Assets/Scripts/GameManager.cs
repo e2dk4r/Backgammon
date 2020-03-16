@@ -1,4 +1,4 @@
-using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -87,5 +87,10 @@ public class GameManager : MonoBehaviour
     private void UndoPiece()
     {
         // TODO: undo move
+        // TODO: undo hit action
+        var lastMove = currentPlayer.movesPlayed.Last();
+
+        lastMove.piece.PlaceOn(lastMove.from.transform, lastMove.from, lastMove.from.pieces.Count);
+        currentPlayer.movesPlayed.Remove(lastMove);
     }
 }
