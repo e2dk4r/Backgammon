@@ -54,6 +54,12 @@ public class Dice : MonoBehaviour
         return values[0] == values[1];
     }
 
+    public int GetWeight()
+    {
+        var sum = values.Sum();
+        return IsDoubleMove() ? sum * 2 : sum;
+    }
+
     public IEnumerable<int> GetMovesList()
     {
         if (!IsDoubleMove())
