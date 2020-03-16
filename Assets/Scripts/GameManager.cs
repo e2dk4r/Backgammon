@@ -86,6 +86,12 @@ public class GameManager : MonoBehaviour
 
     private void UndoPiece()
     {
+        if (currentPlayer.movesPlayed.Count == 0)
+        {
+            Debug.LogError("You must have played a move for undo");
+            return;
+        }
+
         // TODO: undo move
         // TODO: undo hit action
         var lastMove = currentPlayer.movesPlayed.Last();
