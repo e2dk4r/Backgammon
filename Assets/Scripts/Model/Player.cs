@@ -14,15 +14,13 @@ public class Player
 
     public bool IsMoveLeft()
     {
-        var dice = BoardManager.instance.currentDice;
-
         if (!IsPlayableMoveExist())
             return false;
 
-        if (dice.IsDoubleMove() && movesPlayed.Count == 4)
-            return false;
+        var dice = BoardManager.instance.currentDice;
+        var moveWeight = movesPlayed.Sum(x => x.step);
         
-        if (!dice.IsDoubleMove() && movesPlayed.Count == 2)
+        if (dice.GetWeight() == moveWeight)
             return false;
 
         return true;
