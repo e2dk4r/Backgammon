@@ -32,13 +32,22 @@ public class Player
         var dice = BoardManager.instance.currentDice;
         // get moves left
         var movesLeft = dice.GetMovesLeftList(movesPlayed.Select(x => x.step));
-        // all pieces that player owns
-        var pieces = BoardManager.instance.GetAllPiecesByType(pieceType);
+
+        // all pieces that player can move
+        IEnumerable<Piece> pieces = null;
+        var bar = Slot.GetBar(pieceType);
+        if (bar.pieces.Count != 0)
+            pieces = bar.pieces;
+        else
+            pieces = BoardManager.instance.GetAllPiecesByType(pieceType);
 
         foreach (var step in movesLeft)
         {
             foreach (var piece in pieces)
             {
+                if (piece.currentSlot != null && piece.currentSlot.slotType == SlotType.Outside)
+                    continue;
+
                 foreach (var slot in piece.GetForwardSlots())
                 {
                     MoveActionTypes action;
