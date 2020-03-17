@@ -29,7 +29,12 @@ public class GameManager : MonoBehaviour
 
         nextTurnButton.onClick.AddListener(() =>
         {
-            // TODO: error if player does not played their move
+            if (!turnPlayer.rolledDice)
+            {
+                Debug.LogError("You have to roll the dice");
+                return;
+            }
+           
             if (turnPlayer.IsMoveLeft())
             {
                 Debug.LogError("You have to move");
