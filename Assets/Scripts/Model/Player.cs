@@ -39,15 +39,12 @@ public class Player
         if (bar.pieces.Count != 0)
             pieces = bar.pieces;
         else
-            pieces = BoardManager.instance.GetAllPiecesByType(pieceType);
+            pieces = BoardManager.instance.GetAllPiecesByType(pieceType).Where(x => x.currentSlot.slotType != SlotType.Outside);
 
         foreach (var step in movesLeft)
         {
             foreach (var piece in pieces)
             {
-                if (piece.currentSlot != null && piece.currentSlot.slotType == SlotType.Outside)
-                    continue;
-
                 foreach (var slot in piece.GetForwardSlots())
                 {
                     MoveActionTypes action;
