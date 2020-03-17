@@ -43,7 +43,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        currentPlayer = playerWhite;
+        if (PlayerPrefs.GetString(Constants.PREF_CURRENT_PLAYER) == Constants.PREF_CURRENT_PLAYER1)
+            currentPlayer = playerWhite;
+        else
+            currentPlayer = playerBlack;
+
         turnPlayer = currentPlayer;
         UpdateTurnColor();
     }

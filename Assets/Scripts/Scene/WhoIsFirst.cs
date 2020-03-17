@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class WhoIsFirst : MonoBehaviour
@@ -88,6 +89,12 @@ public class WhoIsFirst : MonoBehaviour
     private void AfterCountdownFinished()
     {
         Debug.Log("Switch");
+        if (dicePlayer1.value > dicePlayer2.value)
+            PlayerPrefs.SetString(Constants.PREF_CURRENT_PLAYER, Constants.PREF_CURRENT_PLAYER1);
+        else
+            PlayerPrefs.SetString(Constants.PREF_CURRENT_PLAYER, Constants.PREF_CURRENT_PLAYER2);
+
+        SceneManager.LoadScene(Constants.SCENE_GAME);
     }
 
     private void UpdateInfoText()
