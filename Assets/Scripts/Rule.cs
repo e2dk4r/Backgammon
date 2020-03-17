@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using UnityEngine;
 
 public class Rule
 {
@@ -20,11 +22,24 @@ public class Rule
     public static MoveError ValidateMove(Piece piece, Slot requestedSlot, int steps, out MoveActionTypes action)
     {
         action = MoveActionTypes.Move;
+        var requiredStep = Slot.GetRequiredStepCount(piece.currentSlot, requestedSlot);
+
+        var lastSlot = Slot.GetLastSlotThatHasPiece(piece.pieceType);
+        var requiredStepFromLastSlot = Slot.GetRequiredStepCount(lastSlot, requestedSlot);
 
         //---------------------------------------
         // handle errors
         //---------------------------------------
-        if (Slot.GetRequiredStepCount(piece.currentSlot, requestedSlot) != steps)
+        if (requestedSlot.slotType == SlotType.Outside && !IsAllPiecesHome(piece.pieceType))
+            return MoveError.AllPiecesNotInHome;
+
+        if (requestedSlot.slotType == SlotType.Outside && piece.currentSlot != lastSlot && requiredStep != steps)
+            return MoveError.NotEnoughSteps;
+
+        if (requestedSlot.slotType == SlotType.Outside && piece.currentSlot == lastSlot && steps < requiredStepFromLastSlot)
+            return MoveError.NotEnoughSteps;
+
+        if (requestedSlot.slotType != SlotType.Outside && requiredStep != steps)
             return MoveError.NotEnoughSteps;
 
         if (IsSlotBlockedByEnemy(requestedSlot, Piece.GetEnemyType(piece.pieceType)))
@@ -32,9 +47,6 @@ public class Rule
 
         if (!IsMovingToHome(piece, requestedSlot))
             return MoveError.WrongHomeDirection;
-
-        if (requestedSlot.slotType == SlotType.Outside && !IsAllPiecesHome(piece.pieceType))
-            return MoveError.AllPiecesNotInHome;
 
         //---------------------------------------
         // handle actions
