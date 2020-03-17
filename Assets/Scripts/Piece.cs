@@ -238,9 +238,11 @@ public class Piece : MonoBehaviour
 
             MoveActionTypes action = MoveActionTypes.Move;
             MoveError error = MoveError.Unknown;
+            int stepPlayed = -1;
 
             foreach (var step in movesLeft)
             {
+                stepPlayed = step;
                 error = Rule.ValidateMove(this, collisionSlot, step, out action);
 
                 if (error == MoveError.NoError)
@@ -249,7 +251,7 @@ public class Piece : MonoBehaviour
 
             if (error == MoveError.NoError)
             {
-                OnSuccessfulMove(action);
+                OnSuccessfulMove(action, stepPlayed);
             }
             else
             {
@@ -264,7 +266,7 @@ public class Piece : MonoBehaviour
         Debug.LogError(error);
     }
 
-    private void OnSuccessfulMove(MoveActionTypes action)
+    private void OnSuccessfulMove(MoveActionTypes action, int stepPlayed)
     {
         // TODO: make hit action respond
         var movesPlayedList = GameManager.instance.currentPlayer.movesPlayed;
@@ -272,7 +274,7 @@ public class Piece : MonoBehaviour
         Debug.LogWarning(action);
 
         // log played moves for undo
-        movesPlayedList.Add(new Move { piece = this, from = currentSlot, to = collisionSlot, step = Mathf.Abs(currentSlot.slotId - collisionSlot.slotId), action = action });
+        movesPlayedList.Add(new Move { piece = this, from = currentSlot, to = collisionSlot, step = stepPlayed, action = action });
 
         //---------------------------------------
         // action events
