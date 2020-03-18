@@ -1,7 +1,8 @@
+//#define TEST_VALUES
+
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Collections;
 
 public class Dice : MonoBehaviour
 {
@@ -31,10 +32,28 @@ public class Dice : MonoBehaviour
 
     #endregion
 
+#if TEST_VALUES
+    static int counter = 0;
+#endif
+
     public void Roll()
     {
+#if !TEST_VALUES
         values[0] = Random.Range(1, 7);
         values[1] = Random.Range(1, 7);
+#else
+        if ((counter & 1) == 0)
+        {
+            values[0] = 6;
+            values[1] = 6;
+        }
+        else
+        {
+            values[0] = 3;
+            values[1] = 3;
+        }
+        counter++;
+#endif
 
         AfterRolled();
     }
