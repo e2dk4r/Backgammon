@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -82,6 +83,9 @@ public class GameManager : MonoBehaviour
 
     private void OnNextRoundButtonClick()
     {
+        if (IsAnyPlayerWon())
+            SceneManager.LoadScene(Constants.SCENE_WHO_IS_FIRST);
+
         // increment current round
         currentRound++;
 
@@ -102,19 +106,44 @@ public class GameManager : MonoBehaviour
     {
         // get ui elements
         var roundText = gameEndScreen.transform.Find(UI_TEXT_ROUND).GetComponent<Text>();
-        var playerWhiteWinText = gameEndScreen.transform.Find(UI_PANEL_SCORE).Find(UI_PANEL_SCORE_PLAYER_WHITE).Find(UI_TEXT_SCORE).GetComponent<Text>();
-        var playerBlackWinText = gameEndScreen.transform.Find(UI_PANEL_SCORE).Find(UI_PANEL_SCORE_PLAYER_BLACK).Find(UI_TEXT_SCORE).GetComponent<Text>();
+        var playerWhiteScoreText = gameEndScreen.transform.Find(UI_PANEL_SCORE).Find(UI_PANEL_SCORE_PLAYER_WHITE).Find(UI_TEXT_SCORE).GetComponent<Text>();
+        var playerBlackScoreText = gameEndScreen.transform.Find(UI_PANEL_SCORE).Find(UI_PANEL_SCORE_PLAYER_BLACK).Find(UI_TEXT_SCORE).GetComponent<Text>();
 
         // update ui elements
-        if (currentRound != ROUND_LIMIT)
+        if (!IsAnyPlayerWon())
             roundText.text = $"Round { currentRound }";
         else
             roundText.text = $"Player { Player.Winner(playerWhite, playerBlack).id } won";
 
-        playerWhiteWinText.text = playerWhite.score.ToString();
-        playerBlackWinText.text = playerBlack.score.ToString();
+        playerWhiteScoreText.text = playerWhite.score.ToString();
+        playerBlackScoreText.text = playerBlack.score.ToString();
     }
-    
+
+    private bool IsAnyPlayerWon()
+    {
+        var potentialWeight = (ROUND_LIMIT - currentRound) * 2;
+
+        // if round is equal to limit
+        if (currentRound == ROUND_LIMIT)
+            return true;
+
+        // if white player is winning, 
+        // and if black player + potential still less than white player,
+        // white player won
+        if (playerWhite.score > playerBlack.score &&
+            playerBlack.score + potentialWeight < playerWhite.score)
+            return true;
+
+        // if black player is winning, 
+        // and if white player + potential still less than black player,
+        // black player won
+        if (playerBlack.score > playerWhite.score &&
+            playerWhite.score + potentialWeight < playerBlack.score)
+            return true;
+
+        return false;
+    }
+
     private void ShowGameEndScreen()
     {
         // update game end screen
