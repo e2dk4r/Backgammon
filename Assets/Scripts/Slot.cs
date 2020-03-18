@@ -55,9 +55,9 @@ public class Slot : MonoBehaviour
         var slots = BoardManager.instance.slotArray.Select(x => x.GetComponent<Slot>());
 
         if (type == PieceType.Black)
-            return slots.TakeWhile(x => x.slotId >= 19 && x.slotId <= 24);
+            return slots.Where(x => x.slotId >= 19 && x.slotId <= 24);
 
-        return slots.TakeWhile(x => x.slotId >= 1 && x.slotId <= 6);
+        return slots.Where(x => x.slotId >= 1 && x.slotId <= 6);
     }
 
     public static Slot GetLastSlotThatHasPiece(PieceType type)
