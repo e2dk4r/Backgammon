@@ -309,6 +309,9 @@ public class Piece : MonoBehaviour
         if (hit.collider != null)
         {
             print(hit.collider.name);
+            if (currentSlot.slotType == SlotType.Bar && Slot.IsTopPiece(currentSlot, this))
+                return true;
+
             if (hit.collider.name == name)
                 return true;
         }
