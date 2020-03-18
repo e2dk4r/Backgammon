@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public Button nextTurnButton;
     public Image turnColorImage;
 
-    private const int ROUND_LIMIT = 7;
+    private const int ROUND_LIMIT = 3;
     private int currentRound = 1;
 
     #region Unity API
