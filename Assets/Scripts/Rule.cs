@@ -24,8 +24,7 @@ public class Rule
         action = MoveActionTypes.Move;
         var requiredStep = Slot.GetRequiredStepCount(piece.currentSlot, requestedSlot);
 
-        var lastSlot = Slot.GetLastSlotThatHasPiece(piece.pieceType);
-        var requiredStepFromLastSlot = Slot.GetRequiredStepCount(lastSlot, requestedSlot);
+        
 
         //---------------------------------------
         // handle errors
@@ -33,11 +32,17 @@ public class Rule
         if (requestedSlot.slotType == SlotType.Outside && !IsAllPiecesHome(piece.pieceType))
             return MoveError.AllPiecesNotInHome;
 
-        if (requestedSlot.slotType == SlotType.Outside && piece.currentSlot != lastSlot && requiredStep != steps)
-            return MoveError.NotEnoughSteps;
+        if (requestedSlot.slotType == SlotType.Outside)
+        {
+            var lastSlot = Slot.GetLastSlotThatHasPiece(piece.pieceType);
+            var requiredStepFromLastSlot = Slot.GetRequiredStepCount(lastSlot, requestedSlot);
 
-        if (requestedSlot.slotType == SlotType.Outside && piece.currentSlot == lastSlot && steps < requiredStepFromLastSlot)
-            return MoveError.NotEnoughSteps;
+            if (piece.currentSlot != lastSlot && requiredStep != steps)
+                return MoveError.NotEnoughSteps;
+
+            if (piece.currentSlot == lastSlot && steps < requiredStepFromLastSlot)
+                return MoveError.NotEnoughSteps;
+        }
 
         if (requestedSlot.slotType != SlotType.Outside && requiredStep != steps)
             return MoveError.NotEnoughSteps;
