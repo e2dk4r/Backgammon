@@ -215,6 +215,9 @@ public class BoardManager : MonoBehaviour
 
         whiteBar.GetComponent<Slot>().pieces.Clear();
         blackBar.GetComponent<Slot>().pieces.Clear();
+
+        whiteOutside.GetComponent<Slot>().pieces.Clear();
+        blackOutside.GetComponent<Slot>().pieces.Clear();
     }
 
     private void InitializePieces()

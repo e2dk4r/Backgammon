@@ -207,6 +207,8 @@ public class GameManager : MonoBehaviour
     {
         ResetDice();
 
+        BoardManager.instance.ResetBoard();
+
         // reset pieces
         BoardManager.instance.PlacePiecesOnBoard();
     }
