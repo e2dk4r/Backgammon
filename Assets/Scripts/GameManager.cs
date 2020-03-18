@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -54,10 +55,16 @@ public class GameManager : MonoBehaviour
             currentPlayer = playerBlack;
 
         turnPlayer = currentPlayer;
+        HideCurrentDice();
         UpdateTurnColor();
     }
 
     #endregion
+
+    private void HideCurrentDice()
+    {
+        BoardManager.instance.currentDice.gameObject.SetActive(false);
+    }
 
     private void UpdateTurnColor()
     {
@@ -74,6 +81,7 @@ public class GameManager : MonoBehaviour
 
         // reset dice
         turnPlayer.rolledDice = false;
+        HideCurrentDice();
 
         //--------------------------------
         // turn the set to the next player
