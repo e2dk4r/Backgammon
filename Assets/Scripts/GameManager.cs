@@ -138,14 +138,24 @@ public class GameManager : MonoBehaviour
     {
         if (IsFinished())
         {
+            var score = CalculateScore();
             // increment won round of player
-            playerWonRound.score++;
+            playerWonRound.score += score;
 
             ShowGameEndScreen();
         }
     }
 
     #endregion
+
+    private int CalculateScore()
+    {
+        var enemyOutside = (Piece.GetEnemyType(playerWonRound.pieceType) == PieceType.White) ?
+            BoardManager.instance.whiteOutside.GetComponent<Slot>() :
+            BoardManager.instance.blackOutside.GetComponent<Slot>();
+
+        return (enemyOutside.pieces.Count == 0) ? 2 : 1;
+    }
 
     private void HideCurrentDice()
     {
