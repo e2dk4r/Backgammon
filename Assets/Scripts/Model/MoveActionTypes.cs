@@ -1,3 +1,6 @@
+using System;
+
+[FlagsAttribute]
 public enum MoveActionTypes
 {
     // move piece from one point to another
