@@ -294,6 +294,9 @@ public class Piece : MonoBehaviour
             var slotOutside = Slot.GetOutside(pieceType);
 
             PlaceOn(slotOutside.GetComponent<Slot>(), 0);
+
+            // check round finish
+            GameManager.instance.CheckRoundFinish();
         }
         // place on new slot
         else

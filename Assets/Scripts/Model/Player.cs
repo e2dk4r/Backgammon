@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Collections.Generic;
+using System;
 
 public class Player
 {
@@ -11,6 +12,8 @@ public class Player
     public bool rolledDice = false;
     // list of player's moves for undo
     public List<Move> movesPlayed = new List<Move>();
+    // round count that won
+    public int winRound;
 
     public bool IsMoveLeft()
     {
@@ -57,6 +60,17 @@ public class Player
         }
 
         return false;
+    }
+
+    public static Player Winner(Player lhs, Player rhs)
+    {
+        return (lhs.winRound > rhs.winRound) ? lhs : rhs;
+    }
+
+    public static void ResetForNextRound(Player player)
+    {
+        player.movesPlayed.Clear();
+        player.rolledDice = false;
     }
 }
 
