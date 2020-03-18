@@ -111,8 +111,8 @@ public class GameManager : MonoBehaviour
         else
             roundText.text = $"Player { Player.Winner(playerWhite, playerBlack).id } won";
 
-        playerWhiteWinText.text = playerWhite.winRound.ToString();
-        playerBlackWinText.text = playerBlack.winRound.ToString();
+        playerWhiteWinText.text = playerWhite.score.ToString();
+        playerBlackWinText.text = playerBlack.score.ToString();
     }
     
     private void ShowGameEndScreen()
@@ -139,7 +139,7 @@ public class GameManager : MonoBehaviour
         if (IsFinished())
         {
             // increment won round of player
-            playerWonRound.winRound++;
+            playerWonRound.score++;
 
             ShowGameEndScreen();
         }

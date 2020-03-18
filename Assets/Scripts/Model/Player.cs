@@ -13,7 +13,7 @@ public class Player
     // list of player's moves for undo
     public List<Move> movesPlayed = new List<Move>();
     // round count that won
-    public int winRound;
+    public int score;
 
     public bool IsMoveLeft()
     {
@@ -64,7 +64,7 @@ public class Player
 
     public static Player Winner(Player lhs, Player rhs)
     {
-        return (lhs.winRound > rhs.winRound) ? lhs : rhs;
+        return (lhs.score > rhs.score) ? lhs : rhs;
     }
 
     public static void ResetForNextRound(Player player)
