@@ -57,17 +57,20 @@ public class DiceSingle : MonoBehaviour
             }
         }
 
-        if (!animationFinished && !changeSprite)
-        {
-            body2D.velocity = new Vector2(direction.x * currentMoveSpeed, direction.y * currentMoveSpeed);
-            body2D.rotation = animationTime * 360 * currentRollSpeed;
-        }
-
         if (!animationFinished && changeSprite)
         {
             DisplayRandom();
             changeSprite = false;
             changeSpriteTime = CHANGE_SPRITE_TIME;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (!animationFinished && !changeSprite)
+        {
+            body2D.velocity = new Vector2(direction.x * currentMoveSpeed, direction.y * currentMoveSpeed);
+            body2D.rotation = animationTime * 360 * currentRollSpeed;
         }
     }
 
