@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -94,11 +93,11 @@ public class Rule
             return MoveError.NotEnoughSteps;
 
         // create referance piece for test
-        var pieceRef = new Piece {
-            pieceId = -1,
-            pieceType = piece.pieceType,
-            currentSlot = piece.currentSlot,
-        };
+        var pieceRef = new GameObject().AddComponent<Piece>();
+
+        pieceRef.pieceId = -1;
+        pieceRef.pieceType = piece.pieceType;
+        pieceRef.currentSlot = piece.currentSlot;
 
         // test each moveable step
         MoveError error = MoveError.Unknown;
@@ -106,7 +105,7 @@ public class Rule
         {
             var stepsPlayed = movesPlayed.Select(x => x.step);
             var nextSlot = forwardSlots.Skip((stepsPlayed.Sum() + step) - 1).First();
-            
+
             MoveActionTypes action;
             error = ValidateMove(pieceRef, nextSlot, step, out action);
 
@@ -181,6 +180,8 @@ public class Rule
 
         if (movesPlayed.Count != 0 && movesPlayed.Last().to != requestedSlot)
             return MoveError.Unknown;
+
+        Object.Destroy(pieceRef);
 
         return error;
     }
