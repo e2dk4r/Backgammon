@@ -1,16 +1,16 @@
 //#define TEST_OUTSIDE_WHITE
 //#define TEST_OUTSIDE_BLACK
 //#define TEST_ROUNDS
+//#define TEST_COMBINED_MOVE
 
-#if TEST_OUTSIDE_WHITE || TEST_OUTSIDE_BLACK || TEST_ROUNDS
-    #define TEST
+#if TEST_OUTSIDE_WHITE || TEST_OUTSIDE_BLACK || TEST_ROUNDS || TEST_COMBINED_MOVE
+#define TEST
 #endif
 
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Linq;
-using System;
 
 public class BoardManager : MonoBehaviour
 {
@@ -65,6 +65,10 @@ public class BoardManager : MonoBehaviour
             pieces[index].PlaceOn(whiteBar.GetComponent<Slot>(), 0);
 #elif (TEST && TEST_ROUNDS)
             pieces[index].PlaceOn(whiteOutside.GetComponent<Slot>(), 0);
+#elif (TEST && TEST_COMBINED_MOVE)
+            var slotId = 18;
+            var slot = slotArray[slotId - 1].GetComponent<Slot>();
+            pieces[index].PlaceOn(slot, slot.pieces.Count);
 #endif
 
         }
@@ -83,6 +87,10 @@ public class BoardManager : MonoBehaviour
             pieces[index].PlaceOn(whiteBar.GetComponent<Slot>(), 0);
 #elif (TEST && TEST_ROUNDS)
             pieces[index].PlaceOn(whiteOutside.GetComponent<Slot>(), 0);
+#elif (TEST && TEST_COMBINED_MOVE)
+            var slotId = 2;
+            var slot = slotArray[slotId - 1].GetComponent<Slot>();
+            pieces[index].PlaceOn(slot, slot.pieces.Count);
 #endif
 
         }
@@ -101,6 +109,10 @@ public class BoardManager : MonoBehaviour
             pieces[index].PlaceOn(whiteBar.GetComponent<Slot>(), 0);
 #elif (TEST && TEST_ROUNDS)
             pieces[index].PlaceOn(whiteOutside.GetComponent<Slot>(), 0);
+#elif (TEST && TEST_COMBINED_MOVE)
+            var slotId = 3;
+            var slot = slotArray[slotId - 1].GetComponent<Slot>();
+            pieces[index].PlaceOn(slot, slot.pieces.Count);
 #endif
 
         }
@@ -120,6 +132,10 @@ public class BoardManager : MonoBehaviour
 #elif (TEST && TEST_ROUNDS)
             var slotId = 1;
             pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), slotArray[slotId - 1].GetComponent<Slot>().pieces.Count);
+#elif (TEST && TEST_COMBINED_MOVE)
+            var slotId = 4;
+            var slot = slotArray[slotId - 1].GetComponent<Slot>();
+            pieces[index].PlaceOn(slot, slot.pieces.Count);
 #endif
 
         }
@@ -145,6 +161,10 @@ public class BoardManager : MonoBehaviour
 #elif (TEST && TEST_ROUNDS)
             var slot = blackBar.GetComponent<Slot>();
             pieces[index].PlaceOn(slot, 0);
+#elif (TEST && TEST_COMBINED_MOVE)
+            var slotId = 24;
+            var slot = slotArray[slotId - 1].GetComponent<Slot>();
+            pieces[index].PlaceOn(slot, slot.pieces.Count);
 #endif
         }
 
@@ -163,6 +183,10 @@ public class BoardManager : MonoBehaviour
 #elif (TEST && TEST_ROUNDS)
             var slot = blackBar.GetComponent<Slot>();
             pieces[index].PlaceOn(slot, 0);
+#elif (TEST && TEST_COMBINED_MOVE)
+            var slotId = 23;
+            var slot = slotArray[slotId - 1].GetComponent<Slot>();
+            pieces[index].PlaceOn(slot, slot.pieces.Count);
 #endif
         }
 
@@ -181,6 +205,10 @@ public class BoardManager : MonoBehaviour
 #elif (TEST && TEST_ROUNDS)
             var slot = blackBar.GetComponent<Slot>();
             pieces[index].PlaceOn(slot, 0);
+#elif (TEST && TEST_COMBINED_MOVE)
+            var slotId = 22;
+            var slot = slotArray[slotId - 1].GetComponent<Slot>();
+            pieces[index].PlaceOn(slot, slot.pieces.Count);
 #endif
         }
 
@@ -199,6 +227,10 @@ public class BoardManager : MonoBehaviour
 #elif (TEST && TEST_ROUNDS)
             var slot = blackBar.GetComponent<Slot>();
             pieces[index].PlaceOn(slot, 0);
+#elif (TEST && TEST_COMBINED_MOVE)
+            var slotId = 7;
+            var slot = slotArray[slotId - 1].GetComponent<Slot>();
+            pieces[index].PlaceOn(slot, slot.pieces.Count);
 #endif
         }
 
