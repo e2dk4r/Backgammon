@@ -143,6 +143,10 @@ public class Piece : MonoBehaviour
             if (Rule.IsMovingToHome(this, slot))
                 list.Add(slot);
         }
+
+        if (pieceType == PieceType.White)
+            list.Reverse();
+
         list.Add(outside);
 
         return list;
@@ -255,7 +259,22 @@ public class Piece : MonoBehaviour
             }
             else
             {
-                OnFailedMove(error);
+                ICollection<Move> movesPlayed;
+                
+                error = Rule.ValidateCombinedMove(this, collisionSlot, movesLeft, out movesPlayed);
+                
+                if (error == MoveError.NoError)
+                {
+                    foreach (var move in movesPlayed)
+                    {
+                        OnSuccessfulMove(move.to, move.action, move.step);
+                    }
+                }
+                else
+                {
+                    OnFailedMove(error);
+                }
+                
             }
         }
     }
@@ -268,13 +287,18 @@ public class Piece : MonoBehaviour
 
     private void OnSuccessfulMove(MoveActionTypes action, int stepPlayed)
     {
+        OnSuccessfulMove(collisionSlot, action, stepPlayed);
+    }
+
+    private void OnSuccessfulMove(Slot to, MoveActionTypes action, int stepPlayed)
+    {
         // TODO: make hit action respond
         var movesPlayedList = GameManager.instance.currentPlayer.movesPlayed;
 
         Debug.LogWarning(action);
 
         // log played moves for undo
-        movesPlayedList.Add(new Move { piece = this, from = currentSlot, to = collisionSlot, step = stepPlayed, action = action });
+        movesPlayedList.Add(new Move { piece = this, from = currentSlot, to = to, step = stepPlayed, action = action });
 
         //---------------------------------------
         // action events
@@ -282,7 +306,7 @@ public class Piece : MonoBehaviour
         // move enemy to bar
         if ((action & MoveActionTypes.Hit) == MoveActionTypes.Hit)
         {
-            var enemyPiece = collisionSlot.GetComponent<Slot>().pieces.Last();
+            var enemyPiece = to.GetComponent<Slot>().pieces.Last();
             var enemyBar = Slot.GetBar(Piece.GetEnemyType(pieceType));
 
             enemyPiece.PlaceOn(enemyBar.GetComponent<Slot>(), 0);
@@ -300,7 +324,7 @@ public class Piece : MonoBehaviour
         }
         // place on new slot
         else
-            PlaceOn(collisionSlot, collisionSlot.pieces.Count);
+            PlaceOn(to, to.pieces.Count);
     }
 
     private bool IsMouseOverThis()

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -23,8 +24,6 @@ public class Rule
     {
         action = MoveActionTypes.Move;
         var requiredStep = Slot.GetRequiredStepCount(piece.currentSlot, requestedSlot);
-
-        
 
         //---------------------------------------
         // handle errors
@@ -75,6 +74,115 @@ public class Rule
             action |= MoveActionTypes.Hit;
 
         return MoveError.NoError;
+    }
+
+    public static MoveError ValidateCombinedMove(Piece piece, Slot requestedSlot, IEnumerable<int> steps, out ICollection<Move> movesPlayed)
+    {
+        movesPlayed = new List<Move>();
+
+        // combined move must at least be 2
+        if (steps.Count() < 2)
+            return MoveError.NotEnoughSteps;
+
+        var requiredStep = Slot.GetRequiredStepCount(piece.currentSlot, requestedSlot);
+        var stepsWeight = steps.Sum();
+        var forwardSlots = piece.GetForwardSlots();
+        var isMovesEqual = steps.First() == steps.Last();
+
+        // are moveable steps enough?
+        if (stepsWeight < requiredStep)
+            return MoveError.NotEnoughSteps;
+
+        // create referance piece for test
+        var pieceRef = new Piece {
+            pieceId = -1,
+            pieceType = piece.pieceType,
+            currentSlot = piece.currentSlot,
+        };
+
+        // test each moveable step
+        MoveError error = MoveError.Unknown;
+        foreach (var step in steps)
+        {
+            var stepsPlayed = movesPlayed.Select(x => x.step);
+            var nextSlot = forwardSlots.Skip((stepsPlayed.Sum() + step) - 1).First();
+            
+            MoveActionTypes action;
+            error = ValidateMove(pieceRef, nextSlot, step, out action);
+
+            if (error == MoveError.NoError)
+            {
+                // add move to played list
+                // - add step
+                // - add action that occurred when moving
+                movesPlayed.Add(new Move
+                {
+                    from = pieceRef.currentSlot,
+                    to = nextSlot,
+                    step = step,
+                    action = action,
+                });
+
+                // move referance piece to next slot
+                pieceRef.currentSlot = nextSlot;
+
+                // if we achived destination, stop1
+                if (nextSlot == requestedSlot)
+                    break;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        // if any error happened and moves are not equal
+        if (error != MoveError.NoError && !isMovesEqual)
+        {
+            // reset variables
+            pieceRef.currentSlot = piece.currentSlot;
+            movesPlayed.Clear();
+
+            // test each moveable step, but reversed
+            foreach (var step in steps.Reverse())
+            {
+                var stepsPlayed = movesPlayed.Select(x => x.step);
+                var nextSlot = forwardSlots.Skip((stepsPlayed.Sum() + step) - 1).First();
+
+                MoveActionTypes action;
+                error = ValidateMove(pieceRef, nextSlot, step, out action);
+
+                if (error == MoveError.NoError)
+                {
+                    // add move to played list
+                    // - add step
+                    // - add action that occurred when moving
+                    movesPlayed.Add(new Move
+                    {
+                        from = pieceRef.currentSlot,
+                        to = nextSlot,
+                        step = step,
+                        action = action,
+                    });
+
+                    // move referance piece to next slot
+                    pieceRef.currentSlot = nextSlot;
+
+                    // if we achived destination, stop
+                    if (nextSlot == requestedSlot)
+                        break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        if (movesPlayed.Count != 0 && movesPlayed.Last().to != requestedSlot)
+            return MoveError.Unknown;
+
+        return error;
     }
 
     private static bool IsAllPiecesHome(PieceType type)
