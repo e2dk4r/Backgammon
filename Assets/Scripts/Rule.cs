@@ -106,7 +106,7 @@ public class Rule
             var stepsPlayed = movesPlayed.Select(x => x.step);
             var nextSlot = forwardSlots.Skip((stepsPlayed.Sum() + step) - 1).FirstOrDefault();
 
-            if (nextSlot)
+            if (nextSlot == null)
                 return MoveError.Unknown;
 
             MoveActionTypes action;
