@@ -3,6 +3,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Dice : MonoBehaviour
 {
@@ -39,8 +40,8 @@ public class Dice : MonoBehaviour
     public void Roll()
     {
 #if !TEST_VALUES
-        values[0] = Random.Range(1, 7);
-        values[1] = Random.Range(1, 7);
+        values[0] = UnityEngine.Random.Range(1, 7);
+        values[1] = UnityEngine.Random.Range(1, 7);
 #else
         if ((counter & 1) == 0)
         {
@@ -60,8 +61,14 @@ public class Dice : MonoBehaviour
 
     private void AfterRolled()
     {
+        SortValues();
         // display the values
         DisplayValue();
+    }
+
+    private void SortValues()
+    {
+        Array.Sort(values);
     }
 
     public bool IsDoubleMove()
