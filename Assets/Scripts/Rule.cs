@@ -104,7 +104,10 @@ public class Rule
         foreach (var step in steps)
         {
             var stepsPlayed = movesPlayed.Select(x => x.step);
-            var nextSlot = forwardSlots.Skip((stepsPlayed.Sum() + step) - 1).First();
+            var nextSlot = forwardSlots.Skip((stepsPlayed.Sum() + step) - 1).FirstOrDefault();
+
+            if (nextSlot)
+                return MoveError.Unknown;
 
             MoveActionTypes action;
             error = ValidateMove(pieceRef, nextSlot, step, out action);
