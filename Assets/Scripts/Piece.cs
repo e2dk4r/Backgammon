@@ -14,19 +14,15 @@ public class Piece : MonoBehaviour
     // identifier properties
     //----------------------------
 
-    public int Position
-    {
-        get
-        {
+    public int Position {
+        get {
             if (currentSlot == null)
                 return -1;
             return currentSlot.slotId;
         }
     }
-    public int DenormalizedPosition
-    {
-        get
-        {
+    public int DenormalizedPosition {
+        get {
             return pieceType == PieceType.Black ? 24 - Position : Position;
         }
     }
@@ -35,8 +31,12 @@ public class Piece : MonoBehaviour
     // for touch and drag
     //----------------------------
 
+    private static bool multipleSelection = false;
+    private static IEnumerable<Piece> multipleSelectionList;
+
     // for returning from invalid move
     private Vector2 startPos;
+    private float offsetY;
 
     // flag indicating moving this piece
     private bool isBeingHeld = false;
@@ -54,9 +54,17 @@ public class Piece : MonoBehaviour
             IsCurrentPlayerPiece() &&
             IsCurrentPlayerMoveLeft())
         {
-            OnPieceHold();
+            OnPieceClick();
         }
-        if (isBeingHeld && Input.GetButtonUp("Fire1"))
+
+        if (multipleSelection && Input.GetButtonUp("Fire1"))
+        {
+            foreach (var piece in multipleSelectionList)
+                piece.OnPieceRelease();
+            multipleSelection = false;
+            multipleSelectionList = null;
+        }
+        else if (isBeingHeld && Input.GetButtonUp("Fire1"))
         {
             OnPieceRelease();
         }
@@ -65,7 +73,7 @@ public class Piece : MonoBehaviour
         {
             var mousePos = GetMousePos();
 
-            gameObject.transform.position = new Vector3(mousePos.x, mousePos.y, 0);
+            gameObject.transform.position = new Vector3(mousePos.x, mousePos.y + (currentSlot.IsTopSlot() ? -offsetY : offsetY), 0);
         }
     }
 
@@ -75,7 +83,7 @@ public class Piece : MonoBehaviour
         var slot = collision.gameObject.GetComponent<Slot>();
         if (slot != null)
         {
-            Debug.Log($"Piece #{ pieceId } in Slot #{ slot.slotId }");
+            //Debug.Log($"Piece #{ pieceId } in Slot #{ slot.slotId }");
             collisionSlot = slot;
         }
     }
@@ -176,38 +184,77 @@ public class Piece : MonoBehaviour
         return GameManager.instance.currentPlayer == GameManager.instance.turnPlayer;
     }
 
-    private void OnPieceHold()
+    private void OnPieceClick()
     {
         // if current player does not rolled the dice yet
         if (!IsCurrentPlayerRolled())
         {
             Debug.LogError("Player is not rolled the dice");
-            isBeingHeld = false;
+            BeforeRelease();
         }
 
         // if it is not top piece
         else if (!Slot.IsTopPiece(currentSlot, this))
         {
-            Debug.LogError("Piece is not top of the stack");
-            isBeingHeld = false;
+            if (!BoardManager.instance.currentDice.IsDoubleMove())
+            {
+                Debug.LogError("Piece is not top of the stack");
+                BeforeRelease();
+            }
+
+            // TODO: if current dice has value to move above pieces
+            //look if above pieces can be moved ?
+            // yes => move above pieces at same time
+            else
+            {
+                multipleSelection = true;
+                multipleSelectionList = Slot.GetAbovePieces(this.currentSlot, this).Reverse();
+
+                foreach (var piece in multipleSelectionList)
+                    piece.Hold();
+            }
         }
 
         // if there is piece on bar, it must be placed on first
         else if (!IsBarEmpty() && currentSlot.slotType != SlotType.Bar)
         {
             Debug.LogError("First, pieces on bar must be placed");
-            isBeingHeld = false;
+            BeforeRelease();
         }
 
         else
         {
-            // hold the piece
-            isBeingHeld = true;
-
-            // store current position for invalid move
-            startPos.x = transform.position.x;
-            startPos.y = transform.position.y;
+            Hold();
         }
+    }
+
+    private void Hold()
+    {
+        // hold the piece
+        isBeingHeld = true;
+
+        // store current position for invalid move
+        startPos.x = transform.position.x;
+        startPos.y = transform.position.y;
+
+        // store offset
+        offsetY = Mathf.Abs(GetMousePos().y - this.transform.position.y);
+    }
+
+    private void BeforeRelease()
+    {
+        // reset holding flag
+        isBeingHeld = false;
+    }
+
+    private void AfterRelease()
+    {
+        // reset current position
+        startPos.x = 0;
+        startPos.y = 0;
+
+        // reset offset of hold
+        offsetY = 0;
     }
 
     private bool IsBarEmpty()
@@ -224,7 +271,7 @@ public class Piece : MonoBehaviour
 
     private void OnPieceRelease()
     {
-        isBeingHeld = false;
+        BeforeRelease();
 
         // if collision not happen
         if (collisionSlot == null)
@@ -265,9 +312,9 @@ public class Piece : MonoBehaviour
             else
             {
                 ICollection<Move> movesPlayed;
-                
+
                 error = Rule.ValidateCombinedMove(this, collisionSlot, movesLeft, out movesPlayed);
-                
+
                 // if there are any combined move, move
                 if (error == MoveError.NoError)
                 {
@@ -281,9 +328,11 @@ public class Piece : MonoBehaviour
                 {
                     OnFailedMove(error);
                 }
-                
+
             }
         }
+
+        AfterRelease();
     }
 
     private void OnFailedMove(MoveError error)

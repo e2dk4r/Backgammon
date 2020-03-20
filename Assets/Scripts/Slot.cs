@@ -70,5 +70,15 @@ public class Slot : MonoBehaviour
         return slots.Last(x => x.GetPieceTypeCount(type) >= 1);
     }
 
+    public bool IsTopSlot()
+    {
+        return slotId >= 13 && slotId <= 24;
+    }
+
+    public static IEnumerable<Piece> GetAbovePieces(Slot from, Piece piece)
+    {
+        return from.pieces.SkipWhile(x => x != piece);
+    }
+
     #endregion
 }
