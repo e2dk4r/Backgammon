@@ -178,23 +178,27 @@ public class Piece : MonoBehaviour
 
     private void OnPieceHold()
     {
-        // TODO: if it is not top piece
-        // TODO: if there is piece on bar, it must be placed on first
+        // if current player does not rolled the dice yet
         if (!GameManager.instance.currentPlayer.rolledDice)
         {
             Debug.LogError("Player is not rolled the dice");
             isBeingHeld = false;
         }
+
+        // if it is not top piece
         else if (!Slot.IsTopPiece(currentSlot, this))
         {
             Debug.LogError("Piece is not top of the stack");
             isBeingHeld = false;
         }
+
+        // if there is piece on bar, it must be placed on first
         else if (!IsBarEmpty() && currentSlot.slotType != SlotType.Bar)
         {
             Debug.LogError("First, pieces on bar must be placed");
             isBeingHeld = false;
         }
+
         else
         {
             // hold the piece
@@ -230,9 +234,6 @@ public class Piece : MonoBehaviour
         }
         else
         {
-            // TODO: if there is no other moves left for player
-            // TODO: use rolled dice values
-
             // current dice of player
             var dice = BoardManager.instance.currentDice;
             // current player
@@ -244,25 +245,30 @@ public class Piece : MonoBehaviour
             MoveError error = MoveError.Unknown;
             int stepPlayed = -1;
 
+            // loop through dice values
             foreach (var step in movesLeft)
             {
                 stepPlayed = step;
                 error = Rule.ValidateMove(this, collisionSlot, step, out action);
 
+                // if the move valid, do not continue
                 if (error == MoveError.NoError)
                     break;
             }
 
+            // move to place if move was valid,
             if (error == MoveError.NoError)
             {
                 OnSuccessfulMove(action, stepPlayed);
             }
+            // else try combining dice values to get there
             else
             {
                 ICollection<Move> movesPlayed;
                 
                 error = Rule.ValidateCombinedMove(this, collisionSlot, movesLeft, out movesPlayed);
                 
+                // if there are any combined move, move
                 if (error == MoveError.NoError)
                 {
                     foreach (var move in movesPlayed)
@@ -270,6 +276,7 @@ public class Piece : MonoBehaviour
                         OnSuccessfulMove(move.to, move.action, move.step);
                     }
                 }
+                // roll back to the position you were before
                 else
                 {
                     OnFailedMove(error);
@@ -292,7 +299,6 @@ public class Piece : MonoBehaviour
 
     private void OnSuccessfulMove(Slot to, MoveActionTypes action, int stepPlayed)
     {
-        // TODO: make hit action respond
         var movesPlayedList = GameManager.instance.currentPlayer.movesPlayed;
 
         Debug.LogWarning(action);
