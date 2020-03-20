@@ -179,7 +179,7 @@ public class Piece : MonoBehaviour
     private void OnPieceHold()
     {
         // if current player does not rolled the dice yet
-        if (!GameManager.instance.currentPlayer.rolledDice)
+        if (!IsCurrentPlayerRolled())
         {
             Debug.LogError("Player is not rolled the dice");
             isBeingHeld = false;
