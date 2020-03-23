@@ -16,6 +16,7 @@ public class BoardManager : MonoBehaviour
 {
     public static BoardManager instance;
 
+    [Header("Board Items")]
     public GameObject[] slotArray;
 
     public GameObject whiteBar;
@@ -24,11 +25,13 @@ public class BoardManager : MonoBehaviour
     public GameObject whiteOutside;
     public GameObject blackOutside;
 
+    public Dice currentDice;
+
+    [Header("Piece Defaults")]
     public GameObject piecePrefab;
     public PieceObject blackPieceObject;
     public PieceObject whitePieceObject;
 
-    public Dice currentDice;
     public Button RollDiceButton;
 
     private Piece[] pieces = new Piece[30];
