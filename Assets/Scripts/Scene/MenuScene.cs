@@ -18,10 +18,9 @@ public class MenuScene : MonoBehaviour
     private const float DICEGEN_X = 6;
     private const float DICEGEN_Y = 3;
     private const float DICE_REROLL = .75f;
-    private const int DICE_MAX_LIMIT = 3;
+    private const int DICE_MAX_LIMIT = 5;
     private float diceTimer = 0f;
     private DiceSingle currentDice;
-    private int counter = 1;
 
     private const string PANEL_BUTTON = "Buttons";
     private const string BUTTON_PLAY = "PlayButton";
@@ -42,9 +41,9 @@ public class MenuScene : MonoBehaviour
 
     private void Update()
     {
-        if (currentDice == null)
+        if (currentDice == null && generatedDices.Count < DICE_MAX_LIMIT)
         {
-            var dicePrefab = (counter & 1) == 0 ? blackDicePrefab : whiteDicePrefab;
+            var dicePrefab = (generatedDices.Count & 1) == 0 ? blackDicePrefab : whiteDicePrefab;
             var (location, direction) = GenerateRandom();
 
             dicePrefab.rollSpeed = UnityEngine.Random.Range(1f, 5f);
@@ -65,10 +64,9 @@ public class MenuScene : MonoBehaviour
         {
             diceTimer = DICE_REROLL;
             currentDice = null;
-            counter++;
         }
 
-        if (generatedDices.Count > DICE_MAX_LIMIT)
+        if (generatedDices.Count >= DICE_MAX_LIMIT)
         {
             KillGeneratedDices();
         }
@@ -77,10 +75,8 @@ public class MenuScene : MonoBehaviour
     private void KillGeneratedDices()
     {
         foreach(var dice in generatedDices)
-        {
-            print($"killing { dice.GetInstanceID() }");
             Destroy(dice.gameObject);
-        }
+
         generatedDices.Clear();
         currentDice = null;
         diceTimer = 0f;
