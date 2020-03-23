@@ -47,3 +47,6 @@ TagManager:
   - name: Dice
     uniqueID: 2042934525
     locked: 0
+  - name: UI
+    uniqueID: 3302959391
+    locked: 0
