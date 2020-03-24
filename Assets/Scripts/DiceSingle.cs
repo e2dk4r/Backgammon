@@ -57,12 +57,16 @@ public class DiceSingle : MonoBehaviour
             }
         }
 
-        if (!animationFinished && changeSprite)
+        if (!animationFinished && animationTime > CHANGE_SPRITE_TIME && changeSprite)
         {
             DisplayRandom();
             changeSprite = false;
             changeSpriteTime = CHANGE_SPRITE_TIME;
         }
+
+        if (!animationFinished && animationTime < CHANGE_SPRITE_TIME)
+            DisplayValue();
+            
     }
 
     private void FixedUpdate()
@@ -93,7 +97,6 @@ public class DiceSingle : MonoBehaviour
     private void AfterAnimationFinish()
     {
         body2D.velocity = Vector2.zero;
-        DisplayValue();
     }
 
     private void ResetFields()
@@ -111,12 +114,16 @@ public class DiceSingle : MonoBehaviour
         value = Random.Range(1, 7);
     }
 
-    public void RollAgain(Vector2 startPos)
+    public void RollAgain()
     {
-        body2D.position = new Vector3(startPos.x, startPos.y, 0);
         ResetFields();
         Roll();
         animationStarted = true;
+    }
+    public void RollAgain(Vector2 startPos)
+    {
+        body2D.position = new Vector3(startPos.x, startPos.y, 0);
+        RollAgain();
     }
 
 }
