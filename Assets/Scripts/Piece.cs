@@ -45,7 +45,15 @@ public class Piece : MonoBehaviour
     public Slot currentSlot = null;
     private Slot collisionSlot = null;
 
+    private CircleCollider2D circleCollider2D;
+
     #region Unity API
+
+    private void Awake()
+    {
+        circleCollider2D = GetComponent<CircleCollider2D>();
+    }
+
     void Update()
     {
         if (Input.GetButtonDown("Fire1") && IsMouseOverThis() &&
@@ -91,6 +99,16 @@ public class Piece : MonoBehaviour
     #endregion
 
     #region Draw Methods
+
+    private void DecreaseColliderRadius()
+    {
+        circleCollider2D.radius = .1f;
+    }
+
+    private void IncreaseColliderRadius()
+    {
+        circleCollider2D.radius = .3f;
+    }
 
     public void PlaceOn(Slot slot, int index)
     {
@@ -239,12 +257,18 @@ public class Piece : MonoBehaviour
 
         // store offset
         offsetY = Mathf.Abs(GetMousePos().y - this.transform.position.y);
+
+        // for easing placing
+        DecreaseColliderRadius();
     }
 
     private void BeforeRelease()
     {
         // reset holding flag
         isBeingHeld = false;
+
+        // for easing placing
+        IncreaseColliderRadius();
     }
 
     private void AfterRelease()
