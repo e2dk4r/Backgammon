@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86a19646a0dce5a4cbbd126156b687a3, type: 3}
   m_Name: WhiteDice
   m_EditorClassIdentifier: 
-  values: []
+  valueSprites:
+  - {fileID: 21300000, guid: 3d9108a5dc46bd34daa1f49b22e0352d, type: 3}
+  - {fileID: 21300000, guid: c621e0aaf251abc45b3a2ffd9bcab19f, type: 3}
+  - {fileID: 21300000, guid: 2e08cd65bb9b62443967122fc4745508, type: 3}
+  - {fileID: 21300000, guid: 71446b76847ce0344a1259a8efff8451, type: 3}
+  - {fileID: 21300000, guid: a0eb0f68f1ba03b469dfa31409363ee1, type: 3}
+  - {fileID: 21300000, guid: 67a3021b21a98a24db599d8a9575454d, type: 3}
