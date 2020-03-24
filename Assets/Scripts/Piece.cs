@@ -110,15 +110,28 @@ public class Piece : MonoBehaviour
         circleCollider2D.radius = .3f;
     }
 
-    public void PlaceOn(Slot slot, int index)
+    private float GetOffsetMultiplier(SlotType type)
+    {
+        switch(type)
+        {
+            case SlotType.Board:
+                return .7f;
+            case SlotType.Bar:
+                return .1f;
+        };
+        return 0f;
+    }
+
+    public void PlaceOn(Slot slot)
     {
         var slotPos = slot.transform;
         //-------------------------------------------------
         // calculate offset of y value
         //-------------------------------------------------
-        float posY = index * .7f;
+        float posY = slot.pieces.Count * GetOffsetMultiplier(slot.slotType);
         // if slot is on top region
-        if (slot.slotId >= 13 && slot.slotId <= 24)
+        if (slot.slotId >= 13 && slot.slotId <= 24 || 
+            (slot.slotType == SlotType.Bar && pieceType == PieceType.Black))
             posY *= -1;
 
         //-------------------------------------------------
@@ -388,7 +401,7 @@ public class Piece : MonoBehaviour
             var enemyPiece = to.GetComponent<Slot>().pieces.Last();
             var enemyBar = Slot.GetBar(Piece.GetEnemyType(pieceType));
 
-            enemyPiece.PlaceOn(enemyBar.GetComponent<Slot>(), 0);
+            enemyPiece.PlaceOn(enemyBar.GetComponent<Slot>());
         }
 
         // move yourself to outside
@@ -396,14 +409,14 @@ public class Piece : MonoBehaviour
         {
             var slotOutside = Slot.GetOutside(pieceType);
 
-            PlaceOn(slotOutside.GetComponent<Slot>(), 0);
+            PlaceOn(slotOutside.GetComponent<Slot>());
 
             // check round finish
             GameManager.instance.CheckRoundFinish();
         }
         // place on new slot
         else
-            PlaceOn(to, to.pieces.Count);
+            PlaceOn(to);
     }
 
     private bool IsMouseOverThis()

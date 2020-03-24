@@ -267,19 +267,16 @@ public class GameManager : MonoBehaviour
         }
 
         var lastMove = currentPlayer.movesPlayed.Last();
-        var lastIndex = lastMove.from.slotType != SlotType.Bar ?
-            lastMove.from.pieces.Count :
-            0;
 
         // undo move action
-        lastMove.piece.PlaceOn(lastMove.from, lastIndex);
+        lastMove.piece.PlaceOn(lastMove.from);
 
         // undo hit action
         if ((lastMove.action & MoveActionTypes.Hit) == MoveActionTypes.Hit)
         {
             var enemyBar = Slot.GetBar(Piece.GetEnemyType(lastMove.piece.pieceType));
             var enemyPiece = enemyBar.pieces.Last();
-            enemyPiece.PlaceOn(lastMove.to, lastMove.to.pieces.Count);
+            enemyPiece.PlaceOn(lastMove.to);
         }
 
         currentPlayer.movesPlayed.Remove(lastMove);

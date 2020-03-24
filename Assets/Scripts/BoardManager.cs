@@ -60,18 +60,18 @@ public class BoardManager : MonoBehaviour
 
 #if !(TEST)
             var slotId = 6;
-            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), i);
+            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>());
 #elif (TEST && TEST_OUTSIDE_WHITE)
             var slotId = 6;
-            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), slotArray[slotId - 1].GetComponent<Slot>().pieces.Count);
+            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>());
 #elif (TEST && TEST_OUTSIDE_BLACK)
-            pieces[index].PlaceOn(whiteBar.GetComponent<Slot>(), 0);
+            pieces[index].PlaceOn(whiteBar.GetComponent<Slot>());
 #elif (TEST && TEST_ROUNDS)
-            pieces[index].PlaceOn(whiteOutside.GetComponent<Slot>(), 0);
+            pieces[index].PlaceOn(whiteOutside.GetComponent<Slot>());
 #elif (TEST && TEST_COMBINED_MOVE)
             var slotId = 18;
             var slot = slotArray[slotId - 1].GetComponent<Slot>();
-            pieces[index].PlaceOn(slot, slot.pieces.Count);
+            pieces[index].PlaceOn(slot);
 #endif
 
         }
@@ -82,18 +82,18 @@ public class BoardManager : MonoBehaviour
 
 #if !(TEST)
             var slotId = 8;
-            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), i);
+            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>());
 #elif (TEST && TEST_OUTSIDE_WHITE)
             var slotId = 3;
-            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), slotArray[slotId - 1].GetComponent<Slot>().pieces.Count);
+            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>());
 #elif (TEST && TEST_OUTSIDE_BLACK)
-            pieces[index].PlaceOn(whiteBar.GetComponent<Slot>(), 0);
+            pieces[index].PlaceOn(whiteBar.GetComponent<Slot>());
 #elif (TEST && TEST_ROUNDS)
-            pieces[index].PlaceOn(whiteOutside.GetComponent<Slot>(), 0);
+            pieces[index].PlaceOn(whiteOutside.GetComponent<Slot>());
 #elif (TEST && TEST_COMBINED_MOVE)
             var slotId = 2;
             var slot = slotArray[slotId - 1].GetComponent<Slot>();
-            pieces[index].PlaceOn(slot, slot.pieces.Count);
+            pieces[index].PlaceOn(slot);
 #endif
 
         }
@@ -104,18 +104,18 @@ public class BoardManager : MonoBehaviour
 
 #if !(TEST)
             var slotId = 13;
-            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), i);
+            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>());
 #elif (TEST && TEST_OUTSIDE_WHITE)
             var slotId = 2;
-            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), slotArray[slotId - 1].GetComponent<Slot>().pieces.Count);
+            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>());
 #elif (TEST && TEST_OUTSIDE_BLACK)
-            pieces[index].PlaceOn(whiteBar.GetComponent<Slot>(), 0);
+            pieces[index].PlaceOn(whiteBar.GetComponent<Slot>());
 #elif (TEST && TEST_ROUNDS)
-            pieces[index].PlaceOn(whiteOutside.GetComponent<Slot>(), 0);
+            pieces[index].PlaceOn(whiteOutside.GetComponent<Slot>());
 #elif (TEST && TEST_COMBINED_MOVE)
             var slotId = 3;
             var slot = slotArray[slotId - 1].GetComponent<Slot>();
-            pieces[index].PlaceOn(slot, slot.pieces.Count);
+            pieces[index].PlaceOn(slot);
 #endif
 
         }
@@ -126,19 +126,19 @@ public class BoardManager : MonoBehaviour
 
 #if !(TEST)
             var slotId = 24;
-            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), i);
+            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>());
 #elif (TEST && TEST_OUTSIDE_WHITE)
             var slotId = 1;
-            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), slotArray[slotId - 1].GetComponent<Slot>().pieces.Count);
+            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>());
 #elif (TEST && TEST_OUTSIDE_BLACK)
-            pieces[index].PlaceOn(whiteBar.GetComponent<Slot>(), 0);
+            pieces[index].PlaceOn(whiteBar.GetComponent<Slot>());
 #elif (TEST && TEST_ROUNDS)
             var slotId = 1;
-            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), slotArray[slotId - 1].GetComponent<Slot>().pieces.Count);
+            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>());
 #elif (TEST && TEST_COMBINED_MOVE)
             var slotId = 4;
             var slot = slotArray[slotId - 1].GetComponent<Slot>();
-            pieces[index].PlaceOn(slot, slot.pieces.Count);
+            pieces[index].PlaceOn(slot);
 #endif
 
         }
@@ -154,20 +154,20 @@ public class BoardManager : MonoBehaviour
         {
 #if !(TEST)
             var slotId = 1;
-            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), i);
+            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>());
 #elif (TEST && TEST_OUTSIDE_BLACK)
             var slotId = 19;
-            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), i);
+            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>());
 #elif (TEST && TEST_OUTSIDE_WHITE)
             var slot = blackBar.GetComponent<Slot>();
-            pieces[index].PlaceOn(slot, 0);
+            pieces[index].PlaceOn(slot);
 #elif (TEST && TEST_ROUNDS)
             var slot = blackBar.GetComponent<Slot>();
-            pieces[index].PlaceOn(slot, 0);
+            pieces[index].PlaceOn(slot);
 #elif (TEST && TEST_COMBINED_MOVE)
             var slotId = 24;
             var slot = slotArray[slotId - 1].GetComponent<Slot>();
-            pieces[index].PlaceOn(slot, slot.pieces.Count);
+            pieces[index].PlaceOn(slot);
 #endif
         }
 
@@ -176,20 +176,20 @@ public class BoardManager : MonoBehaviour
         {
 #if !(TEST)
             var slotId = 12;
-            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), i);
+            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>());
 #elif (TEST && TEST_OUTSIDE_BLACK)
             var slotId = 20;
-            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), i);
+            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>());
 #elif (TEST && TEST_OUTSIDE_WHITE)
             var slot = blackBar.GetComponent<Slot>();
-            pieces[index].PlaceOn(slot, 0);
+            pieces[index].PlaceOn(slot);
 #elif (TEST && TEST_ROUNDS)
             var slot = blackBar.GetComponent<Slot>();
-            pieces[index].PlaceOn(slot, 0);
+            pieces[index].PlaceOn(slot);
 #elif (TEST && TEST_COMBINED_MOVE)
             var slotId = 23;
             var slot = slotArray[slotId - 1].GetComponent<Slot>();
-            pieces[index].PlaceOn(slot, slot.pieces.Count);
+            pieces[index].PlaceOn(slot);
 #endif
         }
 
@@ -198,20 +198,20 @@ public class BoardManager : MonoBehaviour
         {
 #if !(TEST)
             var slotId = 17;
-            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), i);
+            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>());
 #elif (TEST && TEST_OUTSIDE_BLACK)
             var slotId = 21;
-            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), i);
+            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>());
 #elif (TEST && TEST_OUTSIDE_WHITE)
             var slot = blackBar.GetComponent<Slot>();
-            pieces[index].PlaceOn(slot, 0);
+            pieces[index].PlaceOn(slot);
 #elif (TEST && TEST_ROUNDS)
             var slot = blackBar.GetComponent<Slot>();
-            pieces[index].PlaceOn(slot, 0);
+            pieces[index].PlaceOn(slot);
 #elif (TEST && TEST_COMBINED_MOVE)
             var slotId = 22;
             var slot = slotArray[slotId - 1].GetComponent<Slot>();
-            pieces[index].PlaceOn(slot, slot.pieces.Count);
+            pieces[index].PlaceOn(slot);
 #endif
         }
 
@@ -220,20 +220,20 @@ public class BoardManager : MonoBehaviour
         {
 #if !(TEST)
             var slotId = 19;
-            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), i);
+            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>());
 #elif (TEST && TEST_OUTSIDE_BLACK)
             var slotId = 22;
-            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>(), i);
+            pieces[index].PlaceOn(slotArray[slotId - 1].GetComponent<Slot>());
 #elif (TEST && TEST_OUTSIDE_WHITE)
             var slot = blackBar.GetComponent<Slot>();
-            pieces[index].PlaceOn(slot, 0);
+            pieces[index].PlaceOn(slot);
 #elif (TEST && TEST_ROUNDS)
             var slot = blackBar.GetComponent<Slot>();
-            pieces[index].PlaceOn(slot, 0);
+            pieces[index].PlaceOn(slot);
 #elif (TEST && TEST_COMBINED_MOVE)
             var slotId = 7;
             var slot = slotArray[slotId - 1].GetComponent<Slot>();
-            pieces[index].PlaceOn(slot, slot.pieces.Count);
+            pieces[index].PlaceOn(slot);
 #endif
         }
 
