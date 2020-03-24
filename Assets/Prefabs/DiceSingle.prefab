@@ -44,15 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 832b1d9609d222d4d804705e7243b936, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  diceSprites:
-  - {fileID: 21300000, guid: 73e6a0c67f3f9ac4db4842e14ac68af8, type: 3}
-  - {fileID: 21300000, guid: 44cd41be3e6c5ab4f98189aeca7fbd46, type: 3}
-  - {fileID: 21300000, guid: 6c807c6b4741f8840b4cc6f664801c29, type: 3}
-  - {fileID: 21300000, guid: f1aee04b87364fd46bf35bbd69cfed54, type: 3}
-  - {fileID: 21300000, guid: df425842ea368f0419a69e79453f6f22, type: 3}
-  - {fileID: 21300000, guid: 89e6bd8c754a76a4faa361faba0b1865, type: 3}
+  diceObject: {fileID: 11400000, guid: 933edce4be1e4464e95148e593c99ff7, type: 2}
   value: 0
   direction: {x: 0, y: 0}
+  moveSpeed: 5
+  rollSpeed: 3
   animationFinished: 0
 --- !u!1 &7199510470917356769
 GameObject:

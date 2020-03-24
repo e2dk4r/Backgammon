@@ -7,7 +7,7 @@ using System;
 
 public class Dice : MonoBehaviour
 {
-    public Sprite[] diceSprites;
+    public DiceObject diceObject;
     public int[] values = new int[2];
 
     private SpriteRenderer firstValueSpriteRenderer;
@@ -27,8 +27,8 @@ public class Dice : MonoBehaviour
 
     private void DisplayValue()
     {
-        firstValueSpriteRenderer.sprite = diceSprites[values[0] - 1];
-        secondValueSpriteRenderer.sprite = diceSprites[values[1] - 1];
+        firstValueSpriteRenderer.sprite = diceObject.valueSprites[values[0] - 1];
+        secondValueSpriteRenderer.sprite = diceObject.valueSprites[values[1] - 1];
     }
 
     #endregion

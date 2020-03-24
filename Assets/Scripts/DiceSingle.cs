@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DiceSingle : MonoBehaviour
 {
-    public Sprite[] diceSprites;
+    public DiceObject diceObject;
     public int value = 0;
     public Vector2 direction;
     public float moveSpeed = 5f;
@@ -84,12 +84,12 @@ public class DiceSingle : MonoBehaviour
 
     private void DisplayValue()
     {
-        spriteRenderer.sprite = diceSprites[value - 1];
+        spriteRenderer.sprite = diceObject.valueSprites[value - 1];
     }
 
     private void DisplayRandom()
     {
-        spriteRenderer.sprite = diceSprites[UnityEngine.Random.Range(0, diceSprites.Length)];
+        spriteRenderer.sprite = diceObject.valueSprites[Random.Range(0, diceObject.valueSprites.Length)];
     }
 
     #endregion
