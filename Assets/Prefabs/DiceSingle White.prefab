@@ -10,12 +10,12 @@ PrefabInstance:
     - target: {fileID: 2162337762050740314, guid: 5f56b4ca34ec53c468923df5b59dfe2a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.2827759
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2162337762050740314, guid: 5f56b4ca34ec53c468923df5b59dfe2a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.088036
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2162337762050740314, guid: 5f56b4ca34ec53c468923df5b59dfe2a,
         type: 3}
@@ -68,57 +68,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 3d9108a5dc46bd34daa1f49b22e0352d,
         type: 3}
-    - target: {fileID: 5202764349339973467, guid: 5f56b4ca34ec53c468923df5b59dfe2a,
-        type: 3}
-      propertyPath: diceSprites.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 5202764349339973467, guid: 5f56b4ca34ec53c468923df5b59dfe2a,
-        type: 3}
-      propertyPath: diceSprites.Array.data[0]
-      value: 
-      objectReference: {fileID: 21300000, guid: 3d9108a5dc46bd34daa1f49b22e0352d,
-        type: 3}
-    - target: {fileID: 5202764349339973467, guid: 5f56b4ca34ec53c468923df5b59dfe2a,
-        type: 3}
-      propertyPath: diceSprites.Array.data[1]
-      value: 
-      objectReference: {fileID: 21300000, guid: c621e0aaf251abc45b3a2ffd9bcab19f,
-        type: 3}
-    - target: {fileID: 5202764349339973467, guid: 5f56b4ca34ec53c468923df5b59dfe2a,
-        type: 3}
-      propertyPath: diceSprites.Array.data[2]
-      value: 
-      objectReference: {fileID: 21300000, guid: 2e08cd65bb9b62443967122fc4745508,
-        type: 3}
-    - target: {fileID: 5202764349339973467, guid: 5f56b4ca34ec53c468923df5b59dfe2a,
-        type: 3}
-      propertyPath: diceSprites.Array.data[3]
-      value: 
-      objectReference: {fileID: 21300000, guid: 71446b76847ce0344a1259a8efff8451,
-        type: 3}
-    - target: {fileID: 5202764349339973467, guid: 5f56b4ca34ec53c468923df5b59dfe2a,
-        type: 3}
-      propertyPath: diceSprites.Array.data[4]
-      value: 
-      objectReference: {fileID: 21300000, guid: a0eb0f68f1ba03b469dfa31409363ee1,
-        type: 3}
-    - target: {fileID: 5202764349339973467, guid: 5f56b4ca34ec53c468923df5b59dfe2a,
-        type: 3}
-      propertyPath: diceSprites.Array.data[5]
-      value: 
-      objectReference: {fileID: 21300000, guid: 67a3021b21a98a24db599d8a9575454d,
-        type: 3}
-    - target: {fileID: 5202764349339973467, guid: 5f56b4ca34ec53c468923df5b59dfe2a,
-        type: 3}
-      propertyPath: direction.x
-      value: 1.2827759
-      objectReference: {fileID: 0}
-    - target: {fileID: 5202764349339973467, guid: 5f56b4ca34ec53c468923df5b59dfe2a,
-        type: 3}
-      propertyPath: direction.y
-      value: -2.088036
-      objectReference: {fileID: 0}
     - target: {fileID: 5202764349339973467, guid: 5f56b4ca34ec53c468923df5b59dfe2a,
         type: 3}
       propertyPath: diceObject
