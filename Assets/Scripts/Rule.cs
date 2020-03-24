@@ -136,6 +136,9 @@ public class Rule
             {
                 break;
             }
+
+            if (!IsBarEmpty(pieceRef.pieceType))
+                break;
         }
 
         // if any error happened and moves are not equal
@@ -178,6 +181,9 @@ public class Rule
                 {
                     break;
                 }
+
+                if (!IsBarEmpty(pieceRef.pieceType))
+                    break;
             }
         }
 
@@ -226,5 +232,14 @@ public class Rule
     {
         var enemyCount = slot.GetPieceTypeCount(enemyType);
         return enemyCount > 1;
+    }
+
+    private static bool IsBarEmpty(PieceType type)
+    {
+        var bar = (type == PieceType.White)
+            ? BoardManager.instance.whiteBar.GetComponent<Slot>()
+            : BoardManager.instance.blackBar.GetComponent<Slot>();
+
+        return bar.pieces.Count == 0;
     }
 }
