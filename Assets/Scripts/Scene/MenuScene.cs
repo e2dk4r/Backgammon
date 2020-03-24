@@ -23,13 +23,14 @@ public class MenuScene : MonoBehaviour
     private DiceSingle currentDice;
 
     private const string PANEL_BUTTON = "Buttons";
+    private const string CONTENT_HOLDER = "Content";
     private const string BUTTON_PLAY = "PlayButton";
     private Button playButton;
 
     private void Awake()
     {
         generatedDices = new List<DiceSingle>();
-        playButton = MainWindow.transform.Find(PANEL_BUTTON).Find(BUTTON_PLAY).GetComponent<Button>();
+        playButton = MainWindow.transform.Find(CONTENT_HOLDER).Find(PANEL_BUTTON).Find(BUTTON_PLAY).GetComponent<Button>();
 
         playButton.onClick.AddListener(PlayGame);
     }
@@ -50,8 +51,8 @@ public class MenuScene : MonoBehaviour
             dicePrefab.moveSpeed = UnityEngine.Random.Range(3f, 6f);
             dicePrefab.direction = direction;
 
-            currentDice = Instantiate(dicePrefab);
-            currentDice.RollAgain(location);
+            currentDice = Instantiate(dicePrefab, location, Quaternion.identity);
+            currentDice.RollAgain();
             generatedDices.Add(currentDice);
         }
 
