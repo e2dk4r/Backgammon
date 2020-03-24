@@ -310,6 +310,9 @@ public class Piece : MonoBehaviour
     {
         BeforeRelease();
 
+        if (multipleSelection)
+            collisionSlot = multipleSelectionList.Last().collisionSlot;
+
         // if collision not happen
         if (collisionSlot == null)
         {
@@ -425,6 +428,7 @@ public class Piece : MonoBehaviour
         if (hit.collider != null)
         {
             print(hit.collider.name);
+
             if (currentSlot.slotType == SlotType.Bar && Slot.IsTopPiece(currentSlot, this))
                 return true;
 
