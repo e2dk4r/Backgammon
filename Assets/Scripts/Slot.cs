@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider2D))]
 public class Slot : MonoBehaviour
 {
     public int slotId = -1;
