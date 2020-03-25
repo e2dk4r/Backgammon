@@ -1,24 +1,129 @@
-//#define TEST_VALUES
-
-using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
-using System;
+using UnityEngine.Events;
 
-public class Dice : MonoBehaviour
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(SpriteRenderer))]
+public class Dice : MonoBehaviour, IThrowable
 {
-    public DiceObject diceObject;
-    public int[] values = new int[2];
+    [Header("Prefabs")]
+    [SerializeField]
+    private DiceObject diceObject;
+    public Vector2 direction;
 
-    private SpriteRenderer firstValueSpriteRenderer;
-    private SpriteRenderer secondValueSpriteRenderer;
+    [Header("Speed")]
+    public float moveSpeed = 5f;
+    public float rollSpeed = 3f;
+
+    private Rigidbody2D body2D;
+    private SpriteRenderer spriteRenderer;
+
+    private bool animationStarted = false;
+    private bool animationFinished = false;
+
+    private const float CHANGE_SPRITE_TIME = .2f;
+    private float changeSpriteTime = CHANGE_SPRITE_TIME;
+    private bool changeSprite = false;
+
+    private int value = 0;
+
+    private bool AnimationStarted
+    {
+        get { return animationStarted; }
+        set
+        {
+            if (value)
+                OnAnimationStart();
+            animationStarted = value;
+        }
+    }
+
+    public bool AnimationFinished
+    {
+        get { return animationFinished; }
+        set
+        {
+            if (value)
+                OnAnimationFinish();
+            animationFinished = value;
+        }
+    }
+
+
+    private bool IsStopped
+    {
+        get
+        {
+            return
+                body2D.velocity.x > -.1f && body2D.velocity.x < .1f &&
+                body2D.velocity.y > -.1f && body2D.velocity.y < .1f;
+        }
+    }
+
+    private bool IsLastFrame
+    {
+        get { return body2D.velocity.magnitude < 1f; }
+    }
 
     #region Unity API
 
     private void Awake()
     {
-        firstValueSpriteRenderer = transform.Find("Value1").GetComponent<SpriteRenderer>();
-        secondValueSpriteRenderer = transform.Find("Value2").GetComponent<SpriteRenderer>();
+        body2D = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    private void FixedUpdate()
+    {
+        // do not continue when animation not started or finished
+        if (!AnimationStarted || AnimationFinished)
+            return;
+
+        //------------------------
+        // calculations
+        //------------------------
+
+        {
+            // if dice is stopped
+            if (IsStopped)
+            {
+                // finish animation
+                AnimationFinished = true;
+                return;
+            }
+        }
+
+        // when not changing sprite
+        if (!changeSprite)
+        {
+            // decrease changing sprite to random
+            changeSpriteTime -= Time.fixedDeltaTime;
+
+            // change sprite when timer finished
+            if (changeSpriteTime <= 0)
+            {
+                changeSprite = true;
+            }
+        }
+
+        //------------------------
+        // drawing calls
+        //------------------------
+
+        // animation is not last frame
+        if (!IsLastFrame && changeSprite)
+        {
+            // display random value
+            DisplayRandom();
+
+            // reset changing sprite
+            changeSprite = false;
+            changeSpriteTime = CHANGE_SPRITE_TIME;
+        }
+
+        // animation is last frame
+        if (IsLastFrame)
+            DisplayValue();
+
     }
 
     #endregion
@@ -27,76 +132,78 @@ public class Dice : MonoBehaviour
 
     private void DisplayValue()
     {
-        firstValueSpriteRenderer.sprite = diceObject.valueSprites[values[0] - 1];
-        secondValueSpriteRenderer.sprite = diceObject.valueSprites[values[1] - 1];
+        spriteRenderer.sprite = diceObject.valueSprites[value - 1];
+    }
+
+    private void DisplayRandom()
+    {
+        spriteRenderer.sprite = diceObject.valueSprites[Random.Range(0, diceObject.valueSprites.Length)];
     }
 
     #endregion
 
-#if TEST_VALUES
-    static int counter = 0;
-#endif
+    #region Animation
 
-    public void Roll()
+    private void ResetAnimation()
     {
-#if !TEST_VALUES
-        values[0] = UnityEngine.Random.Range(1, 7);
-        values[1] = UnityEngine.Random.Range(1, 7);
-#else
-        if ((counter & 1) == 0)
-        {
-            values[0] = 6;
-            values[1] = 6;
-        }
-        else
-        {
-            values[0] = 3;
-            values[1] = 3;
-        }
-        counter++;
-#endif
+        AnimationStarted = false;
+        AnimationFinished = false;
 
-        AfterRolled();
+        changeSpriteTime = CHANGE_SPRITE_TIME;
+        changeSprite = false;
     }
 
-    private void AfterRolled()
+    private void OnAnimationStart()
     {
-        SortValues();
-        // display the values
-        DisplayValue();
+        // move body to direction
+        body2D.AddForce(direction * moveSpeed, ForceMode2D.Impulse);
+
+        // give starting rotation velocity
+        body2D.angularVelocity = 360 * rollSpeed;
+        body2D.angularDrag = rollSpeed;
+    }
+    private void OnAnimationFinish()
+    {
+        body2D.velocity = Vector2.zero;
+        body2D.angularVelocity = 0;
     }
 
-    private void SortValues()
+    #endregion
+
+    #region Dice Functions
+
+    private void Roll()
     {
-        Array.Sort(values);
+        value = Random.Range(1, 7);
     }
 
-    public bool IsDoubleMove()
+    public void Throw()
     {
-        return values[0] == values[1];
+        ResetAnimation();
+        Roll();
+
+        AnimationStarted = true;
     }
 
-    public int GetWeight()
+    public void Throw(int value)
     {
-        var sum = values.Sum();
-        return IsDoubleMove() ? sum * 2 : sum;
+        ResetAnimation();
+        this.value = value;
+
+        AnimationStarted = true;
     }
 
-    public IEnumerable<int> GetMovesList()
+    public void Throw(Vector2 startPos)
     {
-        if (!IsDoubleMove())
-            return values;
-
-        return new int[] { values[0], values[0], values[0], values[0] };
+        body2D.position = new Vector3(startPos.x, startPos.y, 0);
+        Throw();
     }
 
-    public IEnumerable<int> GetMovesLeftList(IEnumerable<int> playedSteps)
+    public void Throw(int value, Vector2 startPos)
     {
-        var list = GetMovesList().ToList();
-
-        foreach (var step in playedSteps)
-            list.RemoveAt(list.FindIndex(x => x == step));
-
-        return list;
+        body2D.position = new Vector3(startPos.x, startPos.y, 0);
+        Throw(value);
     }
+
+    #endregion
 }

@@ -2,6 +2,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider2D))]
 public class Piece : MonoBehaviour
 {
     //----------------------------
@@ -227,7 +228,7 @@ public class Piece : MonoBehaviour
         // if it is not top piece
         else if (!Slot.IsTopPiece(currentSlot, this))
         {
-            if (!BoardManager.instance.currentDice.IsDoubleMove())
+            if (!DiceController.instance.IsDoubleMove())
             {
                 Debug.LogError("Piece is not top of the stack");
                 BeforeRelease();
@@ -321,12 +322,10 @@ public class Piece : MonoBehaviour
         }
         else
         {
-            // current dice of player
-            var dice = BoardManager.instance.currentDice;
             // current player
             var currentPlayer = GameManager.instance.currentPlayer;
             // get moves left
-            var movesLeft = dice.GetMovesLeftList(currentPlayer.movesPlayed.Select(x => x.step));
+            var movesLeft = DiceController.instance.GetMovesLeftList(currentPlayer.movesPlayed.Select(x => x.step));
 
             MoveActionTypes action = MoveActionTypes.Move;
             MoveError error = MoveError.Unknown;
@@ -471,6 +470,13 @@ public class Piece : MonoBehaviour
             return PieceType.Black;
 
         return PieceType.White;
+    }
+
+    public static Piece CreateEmpty()
+    {
+        var go = new GameObject("Piece Empty");
+        go.AddComponent<BoxCollider2D>();
+        return go.AddComponent<Piece>();
     }
 
     #endregion

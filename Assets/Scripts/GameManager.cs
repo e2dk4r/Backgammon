@@ -20,7 +20,9 @@ public class GameManager : MonoBehaviour
 
     public Button undoButton;
     public Button nextTurnButton;
-    public Image turnColorImage;
+    public Button rollButton;
+    public Image firstDiceValueImage;
+    public Image secondDiceValueImage;
 
     private const int ROUND_LIMIT = 3;
     private int currentRound = 1;
@@ -38,6 +40,7 @@ public class GameManager : MonoBehaviour
         gameEndScreen.transform.Find(UI_BUTTON_NEXT_ROUND).GetComponent<Button>().onClick.AddListener(OnNextRoundButtonClick);
         nextTurnButton.onClick.AddListener(OnNextTurnButtonClick);
         undoButton.onClick.AddListener(UndoPiece);
+        rollButton.onClick.AddListener(RollDices);
     }
 
     private void Start()
@@ -50,8 +53,15 @@ public class GameManager : MonoBehaviour
             currentPlayer = playerBlack;
 
         turnPlayer = currentPlayer;
-        HideCurrentDice();
-        UpdateTurnColor();
+        HideDiceValues();
+    }
+
+    private void Update()
+    {
+        if (DiceController.instance.animationStarted && !DiceController.instance.animationFinished)
+        {
+            ShowDiceValues();
+        }
     }
 
     #endregion
@@ -159,6 +169,35 @@ public class GameManager : MonoBehaviour
         gameEndScreen.SetActive(false);
     }
 
+    private void RollDices()
+    {
+        if (!currentPlayer.rolledDice)
+        {
+            DiceController.instance.ThrowDices();
+            ShowDiceValues();
+            currentPlayer.rolledDice = true;
+        }
+        else
+        {
+            Debug.LogError("Current player rolled the dice");
+        }
+    }
+
+    private void HideDiceValues()
+    {
+        firstDiceValueImage.gameObject.SetActive(false);
+        secondDiceValueImage.gameObject.SetActive(false);
+    }
+
+    private void ShowDiceValues()
+    {
+        firstDiceValueImage.gameObject.SetActive(true);
+        secondDiceValueImage.gameObject.SetActive(true);
+
+        firstDiceValueImage.sprite = DiceController.instance.firstValueSprite;
+        secondDiceValueImage.sprite = DiceController.instance.secondValueSprite;
+    }
+
     #endregion
 
     #region Public
@@ -186,16 +225,6 @@ public class GameManager : MonoBehaviour
         return (enemyOutside.pieces.Count == 0) ? 2 : 1;
     }
 
-    private void HideCurrentDice()
-    {
-        BoardManager.instance.currentDice.gameObject.SetActive(false);
-    }
-
-    private void UpdateTurnColor()
-    {
-        turnColorImage.color = currentPlayer.pieceType == PieceType.White ? Color.white : Color.black;
-    }
-
     public void NextTurn()
     {
         //--------------------------------
@@ -220,9 +249,6 @@ public class GameManager : MonoBehaviour
             turnPlayer = playerWhite;
             currentPlayer = turnPlayer;
         }
-
-        //
-        UpdateTurnColor();
     }
 
     private bool IsFinished()
@@ -255,7 +281,7 @@ public class GameManager : MonoBehaviour
     private void ResetDice()
     {
         turnPlayer.rolledDice = false;
-        HideCurrentDice();
+        HideDiceValues();
     }
 
     private void UndoPiece()

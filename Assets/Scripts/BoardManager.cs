@@ -10,8 +10,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
+[RequireComponent(typeof(GameManager))]
 public class BoardManager : MonoBehaviour
 {
     public static BoardManager instance;
@@ -25,22 +25,16 @@ public class BoardManager : MonoBehaviour
     public GameObject whiteOutside;
     public GameObject blackOutside;
 
-    public Dice currentDice;
-
     [Header("Piece Defaults")]
     public GameObject piecePrefab;
     public PieceObject blackPieceObject;
     public PieceObject whitePieceObject;
-
-    public Button RollDiceButton;
 
     private Piece[] pieces = new Piece[30];
     private void Awake()
     {
         if (instance == null)
             instance = this;
-
-        RollDiceButton.onClick.AddListener(RollDices);
 
         InitializePieces();
         PlacePiecesOnBoard();
@@ -263,25 +257,6 @@ public class BoardManager : MonoBehaviour
             var piece = Piece.CreateFromPrefab(piecePrefab, i + 1, pieceObject);
             pieces[i] = piece;
         }
-    }
-
-    private void RollDices()
-    {
-        if (!IsCurrentPlayerRolledDice())
-        {
-            currentDice.Roll();
-            currentDice.gameObject.SetActive(true);
-            GameManager.instance.currentPlayer.rolledDice = true;
-        }
-        else
-        {
-            Debug.LogError("Current player rolled the dice");
-        }
-    }
-
-    private static bool IsCurrentPlayerRolledDice()
-    {
-        return GameManager.instance.currentPlayer.rolledDice;
     }
 
     public IEnumerable<Piece> GetAllPiecesByType(PieceType type)

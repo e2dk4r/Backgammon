@@ -93,7 +93,10 @@ public class Rule
             return MoveError.NotEnoughSteps;
 
         // create referance piece for test
-        var pieceRef = new GameObject().AddComponent<Piece>();
+        var pieceRef = Piece.CreateEmpty();
+
+        if (pieceRef == null)
+            return MoveError.Unknown;
 
         pieceRef.pieceId = -1;
         pieceRef.pieceType = piece.pieceType;
@@ -190,7 +193,7 @@ public class Rule
         if (movesPlayed.Count != 0 && movesPlayed.Last().to != requestedSlot)
             return MoveError.Unknown;
 
-        Object.Destroy(pieceRef);
+        Object.Destroy(pieceRef.gameObject);
 
         return error;
     }

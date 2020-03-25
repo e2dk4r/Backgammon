@@ -20,10 +20,10 @@ public class Player
         if (!IsPlayableMoveExist())
             return false;
 
-        var dice = BoardManager.instance.currentDice;
+        var diceController = DiceController.instance;
         var moveWeight = movesPlayed.Sum(x => x.step);
         
-        if (dice.GetWeight() == moveWeight)
+        if (diceController.GetWeight() == moveWeight)
             return false;
 
         return true;
@@ -32,9 +32,9 @@ public class Player
     private bool IsPlayableMoveExist()
     {
         // current dice of player
-        var dice = BoardManager.instance.currentDice;
+        var diceController = DiceController.instance;
         // get moves left
-        var movesLeft = dice.GetMovesLeftList(movesPlayed.Select(x => x.step));
+        var movesLeft = diceController.GetMovesLeftList(movesPlayed.Select(x => x.step));
 
         // all pieces that player can move
         IEnumerable<Piece> pieces = null;
