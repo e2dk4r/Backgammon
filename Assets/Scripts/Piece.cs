@@ -225,6 +225,13 @@ public class Piece : MonoBehaviour
             BeforeRelease();
         }
 
+        // if there is piece on bar, it must be placed on first
+        else if (!IsBarEmpty() && currentSlot.slotType != SlotType.Bar)
+        {
+            Debug.LogError("First, pieces on bar must be placed");
+            BeforeRelease();
+        }
+
         // if it is not top piece
         else if (!Slot.IsTopPiece(currentSlot, this))
         {
@@ -247,12 +254,6 @@ public class Piece : MonoBehaviour
             }
         }
 
-        // if there is piece on bar, it must be placed on first
-        else if (!IsBarEmpty() && currentSlot.slotType != SlotType.Bar)
-        {
-            Debug.LogError("First, pieces on bar must be placed");
-            BeforeRelease();
-        }
 
         else
         {
