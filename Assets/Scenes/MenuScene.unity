@@ -279,7 +279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aea07e6b5e7d0049852d0f360ad3038, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainWindow: {fileID: 1121428109}
+  playButton: {fileID: 876400956}
   blackDicePrefab: {fileID: 5202764349339973467, guid: 5f56b4ca34ec53c468923df5b59dfe2a,
     type: 3}
   whiteDicePrefab: {fileID: 7834075641682817794, guid: c000c48ecfe5c7044af4de5405179a12,
@@ -454,6 +454,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 876400954}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &876400956 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5332965617197359082, guid: f05f40158e68dca4baba36de282a5c9d,
+    type: 3}
+  m_PrefabInstance: {fileID: 876400954}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &946397256
 GameObject:
   m_ObjectHideFlags: 0

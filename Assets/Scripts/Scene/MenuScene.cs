@@ -8,7 +8,8 @@ using UnityEngine.UI;
 public class MenuScene : MonoBehaviour
 {
     [Header("UI Elements")]
-    public GameObject MainWindow;
+    [SerializeField]
+    private Button playButton;
 
     [Header("Animation")]
     public DiceSingle blackDicePrefab;
@@ -21,17 +22,11 @@ public class MenuScene : MonoBehaviour
     private const int DICE_MAX_LIMIT = 5;
     private float diceTimer = 0f;
     private DiceSingle currentDice;
-
-    private const string PANEL_BUTTON = "Buttons";
-    private const string CONTENT_HOLDER = "Content";
-    private const string BUTTON_PLAY = "PlayButton";
-    private Button playButton;
+   
 
     private void Awake()
     {
         generatedDices = new List<DiceSingle>();
-        playButton = MainWindow.transform.Find(CONTENT_HOLDER).Find(PANEL_BUTTON).Find(BUTTON_PLAY).GetComponent<Button>();
-
         playButton.onClick.AddListener(PlayGame);
     }
 
