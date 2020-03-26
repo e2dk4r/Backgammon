@@ -96,7 +96,7 @@ public class DiceController : MonoBehaviour
         var throwLocation = GetThrowLocation();
         var direction = throwLocation.direction;
         var pos = throwLocation.transform.position;
-        var speed = Random.Range(3f, 7f);
+        var speed = Random.Range(3f, 11f);
 
         Roll();
 
@@ -177,7 +177,7 @@ public class DiceController : MonoBehaviour
         {
             values[0] = 3;
             values[1] = 3;
-        }
+        }   
         counter++;
 #endif
 
