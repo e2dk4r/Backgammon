@@ -140,7 +140,7 @@ public class Rule
                 break;
             }
 
-            if (Slot.GetBar(pieceRef.pieceType).pieces.Count - movesPlayed.Count != 0)
+            if (Slot.GetBar(pieceRef.pieceType).pieces.Count - movesPlayed.Count > 0)
                 break;
         }
 
@@ -185,7 +185,7 @@ public class Rule
                     break;
                 }
 
-                if (Slot.GetBar(pieceRef.pieceType).pieces.Count - movesPlayed.Count != 0)
+                if (Slot.GetBar(pieceRef.pieceType).pieces.Count - movesPlayed.Count > 0)
                     break;
             }
         }
