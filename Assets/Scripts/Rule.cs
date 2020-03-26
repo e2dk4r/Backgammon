@@ -88,6 +88,9 @@ public class Rule
         var forwardSlots = piece.GetForwardSlots();
         var isMovesEqual = steps.First() == steps.Last();
 
+        if (requiredStep < 1)
+            return MoveError.WrongHomeDirection;
+
         // are moveable steps enough?
         if (stepsWeight < requiredStep)
             return MoveError.NotEnoughSteps;
