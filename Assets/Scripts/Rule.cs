@@ -190,10 +190,11 @@ public class Rule
             }
         }
 
+        Object.Destroy(pieceRef.gameObject);
+
         if (movesPlayed.Count != 0 && movesPlayed.Last().to != requestedSlot)
             return MoveError.Unknown;
 
-        Object.Destroy(pieceRef.gameObject);
 
         return error;
     }
