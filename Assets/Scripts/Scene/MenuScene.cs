@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -42,7 +40,7 @@ public class MenuScene : MonoBehaviour
             var dicePrefab = (generatedDices.Count & 1) == 0 ? blackDicePrefab : whiteDicePrefab;
             var (location, direction) = GenerateRandom();
 
-            dicePrefab.rollSpeed = UnityEngine.Random.Range(1f, 5f);
+            dicePrefab.rollSpeed = Random.Range(1f, 5f);
             dicePrefab.moveSpeed = UnityEngine.Random.Range(3f, 6f);
             dicePrefab.direction = direction;
 
