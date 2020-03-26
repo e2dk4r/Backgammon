@@ -108,7 +108,7 @@ public class Piece : MonoBehaviour
 
     private void IncreaseColliderRadius()
     {
-        circleCollider2D.radius = .3f;
+        circleCollider2D.radius = .5f;
     }
 
     private float GetOffsetMultiplier(SlotType type)
