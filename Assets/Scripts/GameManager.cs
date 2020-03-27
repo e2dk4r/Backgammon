@@ -185,10 +185,16 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator AfterRolledDice()
     {
+        nextTurnButton.interactable = false;
+        
+        yield return new WaitForSeconds(2f);
         if (!currentPlayer.IsMoveLeft())
         {
-            yield return new WaitForSeconds(2f);
             NextTurn();
+        }
+        else
+        {
+            nextTurnButton.interactable = true;
         }
     }
 
