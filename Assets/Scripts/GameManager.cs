@@ -174,12 +174,21 @@ public class GameManager : MonoBehaviour
         if (!currentPlayer.rolledDice)
         {
             DiceController.instance.ThrowDices();
-            ShowDiceValues();
             currentPlayer.rolledDice = true;
+            StartCoroutine(AfterRolledDice());
         }
         else
         {
             Debug.LogError("Current player rolled the dice");
+        }
+    }
+
+    private IEnumerator AfterRolledDice()
+    {
+        if (!currentPlayer.IsMoveLeft())
+        {
+            yield return new WaitForSeconds(2f);
+            NextTurn();
         }
     }
 
