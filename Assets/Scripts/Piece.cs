@@ -232,6 +232,12 @@ public class Piece : MonoBehaviour
             BeforeRelease();
         }
 
+        else if (currentSlot.slotType == SlotType.Outside)
+        {
+            Debug.LogError("No other possible move");
+            BeforeRelease();
+        }
+
         // if it is not top piece
         else if (!Slot.IsTopPiece(currentSlot, this))
         {
