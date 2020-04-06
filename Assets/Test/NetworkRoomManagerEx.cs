@@ -1,8 +1,17 @@
 ﻿using Mirror;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class NetworkRoomManagerEx : NetworkRoomManager
 {
+    public static List<NetworkRoomPlayer> RoomPlayers
+    {
+        get
+        {
+            return (singleton as NetworkRoomManager).roomSlots;
+        }
+    }
+
     public override bool OnRoomServerSceneLoadedForPlayer(NetworkConnection conn, GameObject roomPlayer, GameObject gamePlayer)
     {
         var networkPlayer = roomPlayer.GetComponent<NetworkRoomPlayer>();

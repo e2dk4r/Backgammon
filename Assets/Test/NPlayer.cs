@@ -2,26 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using System;
 
 public enum NPlayerType
 {
     White,
     Black
 }
+
 public class NPlayer : NetworkBehaviour
 {
+    [SyncVar]
     public int id;
+    [SyncVar]
     public NPlayerType type;
-
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        CmdSayYourName();
-    }
-
-    [Command]
-    private void CmdSayYourName()
-    {
-        Debug.Log($"I am { id } and { type }");
-    }
 }
